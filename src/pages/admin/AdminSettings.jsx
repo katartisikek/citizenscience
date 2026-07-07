@@ -30,34 +30,74 @@ const AdminSettings = () => {
         <form onSubmit={handleSubmit}>
           <h3 className="mb-3">Κείμενα Αρχικής Σελίδας</h3>
           
-          <div className="form-group">
-            <label className="form-label">Κεντρικός Τίτλος (Hero Title)</label>
-            <input 
-              type="text" 
-              className="form-control" 
-              value={formData.heroTitle} 
-              onChange={e => setFormData({...formData, heroTitle: e.target.value})} 
-            />
-          </div>
-          
-          <div className="form-group">
-            <label className="form-label">Κεντρικό Κείμενο (Hero Subtitle)</label>
-            <textarea 
-              className="form-control" 
-              style={{ minHeight: '80px' }}
-              value={formData.heroSubtitle} 
-              onChange={e => setFormData({...formData, heroSubtitle: e.target.value})}
-            ></textarea>
-          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+            {/* EL Column */}
+            <div>
+              <h4 className="mb-3" style={{ color: 'var(--color-primary)' }}>Ελληνικά (EL)</h4>
+              <div className="form-group">
+                <label className="form-label">Κεντρικός Τίτλος (Hero Title)</label>
+                <input 
+                  type="text" 
+                  className="form-control" 
+                  value={formData.heroTitle} 
+                  onChange={e => setFormData({...formData, heroTitle: e.target.value})} 
+                />
+              </div>
+              
+              <div className="form-group">
+                <label className="form-label">Κεντρικό Κείμενο (Hero Subtitle)</label>
+                <textarea 
+                  className="form-control" 
+                  style={{ minHeight: '80px' }}
+                  value={formData.heroSubtitle} 
+                  onChange={e => setFormData({...formData, heroSubtitle: e.target.value})}
+                ></textarea>
+              </div>
 
-          <div className="form-group mt-4">
-            <label className="form-label">Κείμενο "Ποιοι Είμαστε"</label>
-            <textarea 
-              className="form-control" 
-              style={{ minHeight: '100px' }}
-              value={formData.aboutText} 
-              onChange={e => setFormData({...formData, aboutText: e.target.value})}
-            ></textarea>
+              <div className="form-group mt-4">
+                <label className="form-label">Κείμενο "Ποιοι Είμαστε"</label>
+                <textarea 
+                  className="form-control" 
+                  style={{ minHeight: '100px' }}
+                  value={formData.aboutText} 
+                  onChange={e => setFormData({...formData, aboutText: e.target.value})}
+                ></textarea>
+              </div>
+            </div>
+
+            {/* EN Column */}
+            <div>
+              <h4 className="mb-3" style={{ color: 'var(--color-primary)' }}>English (EN)</h4>
+              <div className="form-group">
+                <label className="form-label">Hero Title</label>
+                <input 
+                  type="text" 
+                  className="form-control" 
+                  value={formData.heroTitle_en || ''} 
+                  onChange={e => setFormData({...formData, heroTitle_en: e.target.value})} 
+                />
+              </div>
+              
+              <div className="form-group">
+                <label className="form-label">Hero Subtitle</label>
+                <textarea 
+                  className="form-control" 
+                  style={{ minHeight: '80px' }}
+                  value={formData.heroSubtitle_en || ''} 
+                  onChange={e => setFormData({...formData, heroSubtitle_en: e.target.value})}
+                ></textarea>
+              </div>
+
+              <div className="form-group mt-4">
+                <label className="form-label">"About Us" Text</label>
+                <textarea 
+                  className="form-control" 
+                  style={{ minHeight: '100px' }}
+                  value={formData.aboutText_en || ''} 
+                  onChange={e => setFormData({...formData, aboutText_en: e.target.value})}
+                ></textarea>
+              </div>
+            </div>
           </div>
 
           <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'flex-end' }}>

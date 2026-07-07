@@ -68,27 +68,28 @@ const stats = [
 
 const Home = () => {
   const { settings } = useData();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  const tData = (obj, key) => i18n.language.startsWith('en') && obj[`${key}_en`] ? obj[`${key}_en`] : obj[key];
 
   return (
     <div>
       {/* ── HERO ───────────────────────────────────────── */}
       <section className="hero animate-fade-in">
         <div className="container" style={{ maxWidth: 820 }}>
-          <span className="overline">Η επιστήμη ανήκει σε όλους</span>
+          <span className="overline">{t('home.hero_overline', 'Η επιστήμη ανήκει σε όλους')}</span>
           <h1 style={{ marginBottom: '1.25rem' }}>
-            {t('home.hero_title')}{' '}
-            <em style={{ fontStyle: 'italic', color: 'var(--primary-700)' }}>{t('home.hero_emphasis')}</em>
+            {tData(settings, 'heroTitle')}
           </h1>
           <p className="text-lead animate-fade-in delay-100" style={{ margin: '0 auto 2.5rem' }}>
-            {t('home.hero_subtitle')}
+            {tData(settings, 'heroSubtitle')}
           </p>
           <div className="animate-fade-in delay-200" style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link to="/participate" className="btn btn-primary">
               {t('home.btn_participate')} <ChevronRight size={18} />
             </Link>
             <Link to="/projects" className="btn btn-outline">
-              Δες τα Projects
+              {t('home.btn_projects', 'Δες τα Projects')}
             </Link>
           </div>
         </div>
@@ -123,8 +124,8 @@ const Home = () => {
         <section className="section" style={{ paddingTop: 0 }}>
           <div className="container">
             <div className="section-header">
-              <span className="overline">Η πλατφόρμα</span>
-              <h2>Επιστήμη, ανοιχτή σε όλους</h2>
+              <span className="overline">{t('home.platform_overline', 'Η πλατφόρμα')}</span>
+              <h2>{t('home.platform_title', 'Επιστήμη, ανοιχτή σε όλους')}</h2>
             </div>
             <div className="bento-grid">
               {features.map((f, i) => (
@@ -132,8 +133,8 @@ const Home = () => {
                   <div className={`icon-box ${f.variant}`} style={{ marginBottom: '1.25rem' }}>
                     {f.icon}
                   </div>
-                  <h3 style={{ marginBottom: '0.75rem' }}>{f.title}</h3>
-                  <p style={{ color: 'var(--color-text)', margin: 0 }}>{f.text}</p>
+                  <h3 style={{ marginBottom: '0.75rem' }}>{t(`home.feature_${i}_title`, f.title)}</h3>
+                  <p style={{ color: 'var(--color-text)', margin: 0 }}>{t(`home.feature_${i}_text`, f.text)}</p>
                 </div>
               ))}
             </div>
@@ -146,10 +147,10 @@ const Home = () => {
         <section className="section" style={{ background: 'var(--cream-dark)', paddingTop: 'var(--space-24)', paddingBottom: 'var(--space-24)' }}>
           <div className="container">
             <div className="section-header centered">
-              <span className="overline">ECSA Framework</span>
-              <h2>Οι 10 Αρχές του Citizen Science</h2>
+              <span className="overline">{t('home.principles_overline', 'ECSA Framework')}</span>
+              <h2>{t('home.principles_title', 'Οι 10 Αρχές του Citizen Science')}</h2>
               <p className="text-lead" style={{ color: 'var(--color-text)', margin: '1rem auto 0' }}>
-                Βασικές αρχές που διέπουν κάθε project της πλατφόρμας μας
+                {t('home.principles_desc', 'Βασικές αρχές που διέπουν κάθε project της πλατφόρμας μας')}
               </p>
             </div>
 
@@ -208,9 +209,9 @@ const Home = () => {
               flexWrap: 'wrap',
             }}>
               <div>
-                <h2 style={{ color: 'white', marginBottom: '0.5rem' }}>Έτοιμος να συμμετέχεις;</h2>
+                <h2 style={{ color: 'white', marginBottom: '0.5rem' }}>{t('home.cta_title', 'Έτοιμος να συμμετέχεις;')}</h2>
                 <p style={{ color: 'rgba(255,255,255,0.75)', margin: 0 }}>
-                  Ξεκίνα το ταξίδι σου στην επιστήμη των πολιτών σήμερα.
+                  {t('home.cta_desc', 'Ξεκίνα το ταξίδι σου στην επιστήμη των πολιτών σήμερα.')}
                 </p>
               </div>
               <Link to="/participate" className="btn" style={{
@@ -219,7 +220,7 @@ const Home = () => {
                 whiteSpace: 'nowrap',
                 flexShrink: 0,
               }}>
-                Ξεκίνα τώρα <ArrowRight size={18} />
+                {t('home.cta_btn', 'Ξεκίνα τώρα')} <ArrowRight size={18} />
               </Link>
             </div>
           </div>
@@ -230,10 +231,10 @@ const Home = () => {
       <RevealSection>
         <section className="section text-center">
           <div className="container">
-            <span className="overline">Δίκτυο</span>
-            <h2 className="mb-4">Οι Συνεργάτες μας</h2>
+            <span className="overline">{t('home.partners_overline', 'Δίκτυο')}</span>
+            <h2 className="mb-4">{t('home.partners_title', 'Οι Συνεργάτες μας')}</h2>
             <p className="text-lead" style={{ margin: '0 auto var(--space-12)' }}>
-              Υποστηρίζεται από κορυφαίους ερευνητικούς οργανισμούς και φορείς της Κρήτης.
+              {t('home.partners_desc', 'Υποστηρίζεται από κορυφαίους ερευνητικούς οργανισμούς και φορείς της Κρήτης.')}
             </p>
             <div style={{
               display: 'flex',

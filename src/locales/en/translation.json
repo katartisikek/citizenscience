@@ -10,31 +10,29 @@
     "login": "Login"
   },
   "home": {
+    "hero_overline": "Science belongs to everyone",
     "hero_title": "Citizen Science",
     "hero_emphasis": "The power of participatory science.",
     "hero_subtitle": "We unite citizens, researchers, and entities to collect environmental data. Together, we better understand and protect our region.",
-    "btn_participate": "Citizen Participation",
-    "btn_propose": "Propose Project",
-    "stats": {
-      "projects": "Active Projects",
-      "participants": "Participants",
-      "observations": "Observations"
-    },
-    "features_title": "Why participate?",
-    "features": {
-      "impact": {
-        "title": "Real Impact",
-        "desc": "Your data helps real environmental studies and decision making."
-      },
-      "easy": {
-        "title": "Easy Participation",
-        "desc": "No special skills required. Recording is simple through our platform."
-      },
-      "community": {
-        "title": "Community",
-        "desc": "Join an active group of citizens with a shared interest in the environment."
-      }
-    }
+    "btn_participate": "Participate",
+    "btn_projects": "View Projects",
+    "platform_overline": "The Platform",
+    "platform_title": "Science, open to everyone",
+    "feature_0_title": "Who we are",
+    "feature_0_text": "An open community of scientists, citizens and organizations working together to understand and protect the environment of Crete.",
+    "feature_1_title": "Mission & Vision",
+    "feature_1_text": "To make science accessible to everyone, building trust and creating solutions for local resilience and public health.",
+    "feature_2_title": "What is Citizen Science",
+    "feature_2_text": "The active participation of the public in scientific research. It does not replace scientists, but creates a powerful collaborative framework.",
+    "principles_overline": "ECSA Framework",
+    "principles_title": "The 10 Principles of Citizen Science",
+    "principles_desc": "Core principles governing every project on our platform",
+    "cta_title": "Ready to participate?",
+    "cta_desc": "Start your journey in citizen science today.",
+    "cta_btn": "Start now",
+    "partners_overline": "Network",
+    "partners_title": "Our Partners",
+    "partners_desc": "Supported by leading research organizations and entities in Crete."
   },
   "footer": {
     "desc": "An initiative to enhance environmental research through active citizen participation.",
@@ -58,5 +56,89 @@
     "step3_title": "3. Collect Data",
     "step3_desc": "Follow the project instructions and make your observations in the field.",
     "form_title": "Citizen Scientist Registration Form"
+  },
+  "projects": {
+    "overline": "Actions",
+    "title": "Our Projects",
+    "desc": "Discover the actions of the Citizen Science Hub. See the results of past research and find active projects you can join today.",
+    "filter_all": "All",
+    "filter_active": "Active",
+    "filter_completed": "Completed",
+    "participants_suffix": "people",
+    "btn_more": "More",
+    "no_results": "No projects found for this category."
+  },
+  "news": {
+    "overline": "Updates",
+    "title": "News & Events",
+    "desc": "Stay informed about the latest developments, announcements, and upcoming events.",
+    "latest": "Latest News",
+    "read_more": "Read more",
+    "upcoming": "Upcoming Events",
+    "all_events": "All Events"
+  },
+  "entities": {
+    "feat_1_title": "Partnerships with Organizations",
+    "feat_1_text": "Research centers and universities can leverage our network to collect large-scale data with direct community participation.",
+    "feat_2_title": "Policy Makers",
+    "feat_2_text": "Municipalities and regions can base their decisions on reliable local data (evidence-based policy).",
+    "feat_3_title": "Action Planning",
+    "feat_3_text": "We support the co-creation of environmental actions according to local needs.",
+    "feat_4_title": "Provided Support",
+    "feat_4_text": "We provide the expertise, digital tools, and methodology for the implementation of reliable projects.",
+    "overline": "Partnerships",
+    "title": "For Entities & Municipalities",
+    "desc": "Partner with us to strengthen environmental resilience, based on data collected by citizens themselves.",
+    "contact_overline": "Contact",
+    "form_title": "Expression of Interest Form",
+    "form_desc": "Do you represent a Municipality, School, or Organization? Fill out the form and we will contact you.",
+    "f_org": "Entity / Organization Name *",
+    "f_org_ph": "e.g. Municipality of Heraklion",
+    "f_name": "Full Name of Representative *",
+    "f_name_ph": "Full Name",
+    "f_email": "Contact Email *",
+    "f_phone": "Phone",
+    "f_desc": "Brief description of interest *",
+    "f_desc_ph": "Describe the interest or proposed collaboration...",
+    "f_submit": "Submit"
+  },
+  "opendata": {
+    "title": "Open Data",
+    "desc": "Transparency is a core principle of Citizen Science. Here you can find the results of our research, maps, and reports accessible to all.",
+    "dashboards": "Interactive Maps & Dashboards",
+    "dashboard_ph": "The map Dashboard will load here.",
+    "dashboard_sub": "(Real-time data integration)",
+    "reports_title": "Reports & Policy Makers",
+    "report_item": "Annual Report",
+    "raw_title": "Raw Open Data",
+    "raw_desc": "Download anonymous raw data for your own analysis, under an open source license (where applicable).",
+    "updated_yesterday": "Updated yesterday"
+  },
+  "propose": {
+    "title": "Propose a New Project",
+    "desc": "Do you have an idea for a new Citizen Science project? Share it with us and we will help you design and implement it.",
+    "success_title": "Your Proposal Has Been Submitted!",
+    "success_desc": "Thank you for your idea. Our scientific team will study it and contact you as soon as possible.",
+    "btn_new": "Submit New Proposal",
+    "f_name": "Name / Organization *",
+    "f_name_ph": "e.g. Municipality of Phaistos or John Doe",
+    "f_email": "Email *",
+    "f_email_ph": "Your email",
+    "f_title": "Idea / Project Title *",
+    "f_title_ph": "Provide a short title",
+    "f_category": "Thematic Category",
+    "cat_bio": "Biodiversity",
+    "cat_health": "Public Health",
+    "cat_water": "Water Quality",
+    "cat_air": "Air Quality",
+    "cat_climate": "Climate Change",
+    "cat_other": "Other",
+    "f_area": "Area of Application",
+    "f_area_ph": "e.g. Heraklion, Chania, all of Crete",
+    "f_desc": "Description *",
+    "f_desc_ph": "Describe your idea, the problem it solves, and how citizens can participate.",
+    "f_file": "Attach File (optional)",
+    "f_file_hint": "Allowed files: PDF, DOCX, JPG (Max size: 5MB)",
+    "btn_submit": "Submit Proposal"
   }
 }

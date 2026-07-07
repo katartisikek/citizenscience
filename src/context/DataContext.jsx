@@ -8,24 +8,38 @@ const initialProjects = [
   {
     id: 1,
     title: "Mosquito Watch",
+    title_en: "Mosquito Watch",
     status: "Ενεργό",
+    status_en: "Active",
     image: "https://images.unsplash.com/photo-1615814041724-4fec8b74c2e6?auto=format&fit=crop&q=80&w=800",
     description: "Παρακολούθηση και καταγραφή πληθυσμών κουνουπιών στην Κρήτη για την προστασία της δημόσιας υγείας.",
+    description_en: "Monitoring and recording mosquito populations in Crete to protect public health.",
     goal: "Χαρτογράφηση εστιών αναπαραγωγής",
+    goal_en: "Mapping breeding grounds",
     participants: "Όλοι οι πολίτες",
+    participants_en: "All citizens",
     area: "Παγκρήτια",
+    area_en: "All over Crete",
     timeline: "Μάιος - Οκτώβριος 2026",
+    timeline_en: "May - October 2026",
   },
   {
     id: 2,
     title: "Youth4Diagnostics",
+    title_en: "Youth4Diagnostics",
     status: "Ολοκληρωμένο",
+    status_en: "Completed",
     image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&q=80&w=800",
     description: "Συλλογή δειγμάτων νερού από μαθητές για την ανάλυση της ποιότητας των υδάτινων πόρων της περιοχής.",
+    description_en: "Collection of water samples by students for the analysis of the area's water resources quality.",
     goal: "Ανάλυση ποιότητας νερού",
+    goal_en: "Water quality analysis",
     participants: "Μαθητές & Εκπαιδευτικοί",
+    participants_en: "Students & Teachers",
     area: "Νομός Ηρακλείου",
+    area_en: "Heraklion Prefecture",
     timeline: "Σεπτέμβριος 2025 - Μάιος 2026",
+    timeline_en: "September 2025 - May 2026",
   }
 ];
 
@@ -33,25 +47,36 @@ const initialNews = [
   {
     id: 1,
     title: "Έναρξη της νέας καμπάνιας Mosquito Watch για το καλοκαίρι του 2026",
+    title_en: "Launch of the new Mosquito Watch campaign for summer 2026",
     date: "12 Μαΐου 2026",
+    date_en: "May 12, 2026",
     type: "Ανακοίνωση",
+    type_en: "Announcement",
     content: "Η Περιφέρεια Κρήτης σε συνεργασία με το Citizen Science Hub ανακοινώνουν την έναρξη της καλοκαιρινής δράσης για την παρακολούθηση κουνουπιών...",
+    content_en: "The Region of Crete in collaboration with the Citizen Science Hub announces the launch of the summer action for mosquito monitoring...",
     image: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=800"
   },
   {
     id: 2,
     title: "Αποτελέσματα Δειγματοληψίας Νερού Youth4Diagnostics",
+    title_en: "Youth4Diagnostics Water Sampling Results",
     date: "10 Απριλίου 2026",
+    date_en: "April 10, 2026",
     type: "Αποτελέσματα",
+    type_en: "Results",
     content: "Δημοσιεύθηκαν σήμερα τα αποτελέσματα από την ανάλυση 500 δειγμάτων νερού που συλλέχθηκαν από μαθητές...",
+    content_en: "The results from the analysis of 500 water samples collected by students were published today...",
     image: "https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&q=80&w=800"
   }
 ];
 
 const initialSettings = {
   heroTitle: "Citizen Science Hub of Crete",
+  heroTitle_en: "Citizen Science Hub of Crete",
   heroSubtitle: "Όταν οι πολίτες συμμετέχουν στην έρευνα, γίνονται μέρος της λύσης. Ελάτε να κατανοήσουμε και να προστατεύσουμε το περιβάλλον της Κρήτης μαζί.",
-  aboutText: "Ένα δίκτυο πολιτών, επιστημόνων και φορέων της Κρήτης που συνεργάζονται για τη συλλογή κρίσιμων περιβαλλοντικών δεδομένων με σύγχρονες μεθόδους."
+  heroSubtitle_en: "When citizens participate in research, they become part of the solution. Come understand and protect the environment of Crete with us.",
+  aboutText: "Ένα δίκτυο πολιτών, επιστημόνων και φορέων της Κρήτης που συνεργάζονται για τη συλλογή κρίσιμων περιβαλλοντικών δεδομένων με σύγχρονες μεθόδους.",
+  aboutText_en: "A network of citizens, scientists, and entities of Crete collaborating to collect critical environmental data with modern methods."
 };
 
 export const DataProvider = ({ children }) => {

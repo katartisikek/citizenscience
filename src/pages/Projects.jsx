@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ArrowRight, MapPin, Calendar, Users, FolderOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useData } from '../context/DataContext';
+import { useTranslation } from 'react-i18next';
 
 const statusColors = {
   'Ενεργό':        { bg: 'var(--primary-100)',  text: 'var(--primary-700)',  border: 'var(--primary-300)' },
@@ -10,7 +11,10 @@ const statusColors = {
 
 const Projects = () => {
   const { projects } = useData();
+  const { t, i18n } = useTranslation();
   const [filter, setFilter] = useState('All');
+
+  const tData = (item, key) => i18n.language.startsWith('en') && item[`${key}_en`] ? item[`${key}_en`] : item[key];
 
   const filteredProjects = filter === 'All'
     ? projects
@@ -21,11 +25,10 @@ const Projects = () => {
       {/* Page Header */}
       <section className="section-sm">
         <div className="container">
-          <span className="overline">Δράσεις</span>
-          <h1 style={{ marginBottom: '1rem' }}>Τα Projects μας</h1>
+          <span className="overline">{t('projects.overline', 'Δράσεις')}</span>
+          <h1 style={{ marginBottom: '1rem' }}>{t('projects.title', 'Τα Projects μας')}</h1>
           <p className="text-lead">
-            Ανακαλύψτε τις δράσεις του Citizen Science Hub. Δείτε αποτελέσματα παλαιότερων
-            ερευνών και βρείτε ενεργά projects στα οποία μπορείτε να συμμετέχετε σήμερα.
+            {t('projects.desc', 'Ανακαλύψτε τις δράσεις του Citizen Science Hub. Δείτε αποτελέσματα παλαιότερων ερευνών και βρείτε ενεργά projects στα οποία μπορείτε να συμμετέχετε σήμερα.')}
           </p>
         </div>
       </section>
@@ -35,9 +38,9 @@ const Projects = () => {
         <div className="container">
           <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '2.5rem' }}>
             {[
-              { key: 'All', label: 'Όλα' },
-              { key: 'Ενεργό', label: 'Ενεργά' },
-              { key: 'Ολοκληρωμένο', label: 'Ολοκληρωμένα' },
+              { key: 'All', label: t('projects.filter_all', 'Όλα') },
+              { key: 'Ενεργό', label: t('projects.filter_active', 'Ενεργά') },
+              { key: 'Ολοκληρωμένο', label: t('projects.filter_completed', 'Ολοκληρωμένα') },
             ].map(tab => (
               <button
                 key={tab.key}
@@ -76,15 +79,15 @@ const Projects = () => {
                       borderRadius: 'var(--radius-full)',
                       fontSize: '0.78rem', fontWeight: 600,
                     }}>
-                      {project.status}
+                      {tData(project, 'status')}
                     </span>
                   </div>
 
                   {/* Content */}
                   <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                    <h3 style={{ marginBottom: '0.625rem', fontSize: '1.25rem' }}>{project.title}</h3>
+                    <h3 style={{ marginBottom: '0.625rem', fontSize: '1.25rem' }}>{tData(project, 'title')}</h3>
                     <p style={{ color: 'var(--color-text)', fontSize: '0.93rem', flex: 1, marginBottom: '1.25rem', lineHeight: 1.6 }}>
-                      {project.description}
+                      {tData(project, 'description')}
                     </p>
 
                     {/* Meta */}
@@ -94,18 +97,18 @@ const Projects = () => {
                       marginBottom: '1.25rem', fontSize: '0.85rem', color: 'var(--color-text-light)',
                     }}>
                       <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                        <MapPin size={14} style={{ color: 'var(--primary-500)' }} /> {project.area}
+                        <MapPin size={14} style={{ color: 'var(--primary-500)' }} /> {tData(project, 'area')}
                       </span>
                       <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                        <Calendar size={14} style={{ color: 'var(--primary-500)' }} /> {project.timeline}
+                        <Calendar size={14} style={{ color: 'var(--primary-500)' }} /> {tData(project, 'timeline')}
                       </span>
                       <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                        <Users size={14} style={{ color: 'var(--primary-500)' }} /> {project.participants} άτομα
+                        <Users size={14} style={{ color: 'var(--primary-500)' }} /> {tData(project, 'participants')} {t('projects.participants_suffix', 'άτομα')}
                       </span>
                     </div>
 
                     <Link to={`/projects/${project.id}`} className="btn btn-outline" style={{ fontSize: '0.9rem' }}>
-                      Περισσότερα <ArrowRight size={16} />
+                      {t('projects.btn_more', 'Περισσότερα')} <ArrowRight size={16} />
                     </Link>
                   </div>
                 </article>
@@ -116,7 +119,7 @@ const Projects = () => {
           {filteredProjects.length === 0 && (
             <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--color-text-light)' }}>
               <FolderOpen size={48} style={{ margin: '0 auto 1rem', opacity: 0.4 }} />
-              <p>Δεν βρέθηκαν projects για αυτή την κατηγορία.</p>
+              <p>{t('projects.no_results', 'Δεν βρέθηκαν projects για αυτή την κατηγορία.')}</p>
             </div>
           )}
         </div>

@@ -7,16 +7,18 @@ const AdminProjects = () => {
   const { projects, addProject, updateProject, deleteProject } = useData();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [activeTab, setActiveTab] = useState('el');
   const [formData, setFormData] = useState({
-    title: '', status: 'Ενεργό', description: '', goal: '', participants: '', area: '', timeline: '', image: ''
+    title: '', title_en: '', status: 'Ενεργό', status_en: 'Active', description: '', description_en: '', goal: '', goal_en: '', participants: '', participants_en: '', area: '', area_en: '', timeline: '', timeline_en: '', image: ''
   });
 
   const handleOpenModal = (project = null) => {
+    setActiveTab('el');
     if (project) {
       setFormData(project);
       setEditingId(project.id);
     } else {
-      setFormData({ title: '', status: 'Ενεργό', description: '', goal: '', participants: '', area: '', timeline: '', image: '' });
+      setFormData({ title: '', title_en: '', status: 'Ενεργό', status_en: 'Active', description: '', description_en: '', goal: '', goal_en: '', participants: '', participants_en: '', area: '', area_en: '', timeline: '', timeline_en: '', image: '' });
       setEditingId(null);
     }
     setIsModalOpen(true);
@@ -99,44 +101,100 @@ const AdminProjects = () => {
               <button onClick={() => setIsModalOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}><X size={24} /></button>
             </div>
             
+            <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', borderBottom: '1px solid var(--color-border)', paddingBottom: '0.5rem' }}>
+              <button 
+                onClick={() => setActiveTab('el')} 
+                style={{ background: 'none', border: 'none', borderBottom: activeTab === 'el' ? '2px solid var(--color-primary)' : 'none', padding: '0.5rem 1rem', cursor: 'pointer', fontWeight: activeTab === 'el' ? 600 : 400, color: activeTab === 'el' ? 'var(--color-primary)' : 'var(--color-text)' }}
+              >Ελληνικά (EL)</button>
+              <button 
+                onClick={() => setActiveTab('en')} 
+                style={{ background: 'none', border: 'none', borderBottom: activeTab === 'en' ? '2px solid var(--color-primary)' : 'none', padding: '0.5rem 1rem', cursor: 'pointer', fontWeight: activeTab === 'en' ? 600 : 400, color: activeTab === 'en' ? 'var(--color-primary)' : 'var(--color-text)' }}
+              >English (EN)</button>
+            </div>
+
             <form onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label className="form-label">Τίτλος</label>
-                <input type="text" className="form-control" required value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} />
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                <div className="form-group">
-                  <label className="form-label">Κατάσταση</label>
-                  <select className="form-control" value={formData.status} onChange={e => setFormData({...formData, status: e.target.value})}>
-                    <option>Ενεργό</option>
-                    <option>Ολοκληρωμένο</option>
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Περιοχή</label>
-                  <input type="text" className="form-control" required value={formData.area} onChange={e => setFormData({...formData, area: e.target.value})} />
-                </div>
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                <div className="form-group">
-                  <label className="form-label">Χρονοδιάγραμμα</label>
-                  <input type="text" className="form-control" required value={formData.timeline} onChange={e => setFormData({...formData, timeline: e.target.value})} />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Συμμετέχοντες</label>
-                  <input type="text" className="form-control" required value={formData.participants} onChange={e => setFormData({...formData, participants: e.target.value})} />
-                </div>
-              </div>
-              <div className="form-group">
-                <label className="form-label">Στόχος</label>
-                <input type="text" className="form-control" required value={formData.goal} onChange={e => setFormData({...formData, goal: e.target.value})} />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Περιγραφή</label>
-                <textarea className="form-control" required style={{ minHeight: '100px' }} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})}></textarea>
-              </div>
-              <div className="form-group">
-                <label className="form-label">Εικόνα (URL)</label>
+              {activeTab === 'el' && (
+                <>
+                  <div className="form-group">
+                    <label className="form-label">Τίτλος</label>
+                    <input type="text" className="form-control" required value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} />
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    <div className="form-group">
+                      <label className="form-label">Κατάσταση</label>
+                      <select className="form-control" value={formData.status} onChange={e => setFormData({...formData, status: e.target.value})}>
+                        <option>Ενεργό</option>
+                        <option>Ολοκληρωμένο</option>
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Περιοχή</label>
+                      <input type="text" className="form-control" required value={formData.area} onChange={e => setFormData({...formData, area: e.target.value})} />
+                    </div>
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    <div className="form-group">
+                      <label className="form-label">Χρονοδιάγραμμα</label>
+                      <input type="text" className="form-control" required value={formData.timeline} onChange={e => setFormData({...formData, timeline: e.target.value})} />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Συμμετέχοντες</label>
+                      <input type="text" className="form-control" required value={formData.participants} onChange={e => setFormData({...formData, participants: e.target.value})} />
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Στόχος</label>
+                    <input type="text" className="form-control" required value={formData.goal} onChange={e => setFormData({...formData, goal: e.target.value})} />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Περιγραφή</label>
+                    <textarea className="form-control" required style={{ minHeight: '100px' }} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})}></textarea>
+                  </div>
+                </>
+              )}
+
+              {activeTab === 'en' && (
+                <>
+                  <div className="form-group">
+                    <label className="form-label">Title</label>
+                    <input type="text" className="form-control" value={formData.title_en || ''} onChange={e => setFormData({...formData, title_en: e.target.value})} />
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    <div className="form-group">
+                      <label className="form-label">Status</label>
+                      <select className="form-control" value={formData.status_en || 'Active'} onChange={e => setFormData({...formData, status_en: e.target.value})}>
+                        <option>Active</option>
+                        <option>Completed</option>
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Area</label>
+                      <input type="text" className="form-control" value={formData.area_en || ''} onChange={e => setFormData({...formData, area_en: e.target.value})} />
+                    </div>
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    <div className="form-group">
+                      <label className="form-label">Timeline</label>
+                      <input type="text" className="form-control" value={formData.timeline_en || ''} onChange={e => setFormData({...formData, timeline_en: e.target.value})} />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Participants</label>
+                      <input type="text" className="form-control" value={formData.participants_en || ''} onChange={e => setFormData({...formData, participants_en: e.target.value})} />
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Goal</label>
+                    <input type="text" className="form-control" value={formData.goal_en || ''} onChange={e => setFormData({...formData, goal_en: e.target.value})} />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Description</label>
+                    <textarea className="form-control" style={{ minHeight: '100px' }} value={formData.description_en || ''} onChange={e => setFormData({...formData, description_en: e.target.value})}></textarea>
+                  </div>
+                </>
+              )}
+
+              <div className="form-group mt-3">
+                <label className="form-label">Εικόνα (URL) / Image (URL)</label>
                 <input type="url" className="form-control" placeholder="https://..." value={formData.image} onChange={e => setFormData({...formData, image: e.target.value})} />
               </div>
               
