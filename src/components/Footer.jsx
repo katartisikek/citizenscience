@@ -75,7 +75,7 @@ const Footer = () => {
             <h3>{t('footer.contact')}</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
               {[
-                { icon: <Mail size={16} />, text: 'info@citizensciencecrete.gr', href: 'mailto:info@citizensciencecrete.gr' },
+                { icon: <Mail size={16} />, text: 'eu@katartisi.gr', href: 'mailto:eu@katartisi.gr' },
                 { icon: <Phone size={16} />, text: '+30 2810 123456', href: 'tel:+302810123456' },
                 { icon: <MapPin size={16} />, text: t('footer.address'), href: null },
               ].map((c, i) => (
