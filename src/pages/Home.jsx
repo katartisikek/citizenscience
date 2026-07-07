@@ -76,7 +76,7 @@ const Home = () => {
           <span className="overline">Η επιστήμη ανήκει σε όλους</span>
           <h1 style={{ marginBottom: '1.25rem' }}>
             {settings.heroTitle}{' '}
-            <em style={{ fontStyle: 'italic', color: 'var(--primary-700)' }}>Η δύναμη της συμμετοχής.</em>
+            <em style={{ fontStyle: 'italic', color: 'var(--primary-700)' }}>Η δύναμη της συμμετοχικής επιστήμης.</em>
           </h1>
           <p className="text-lead animate-fade-in delay-100" style={{ margin: '0 auto 2.5rem' }}>
             {settings.heroSubtitle}
