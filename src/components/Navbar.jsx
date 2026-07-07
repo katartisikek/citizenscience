@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Menu, X, Leaf } from 'lucide-react';
+import { Menu, X, Leaf, Globe } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Navbar = () => {
+  const { t, i18n } = useTranslation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
@@ -19,14 +21,19 @@ const Navbar = () => {
   }, [isMobileOpen]);
 
   const navLinks = [
-    { name: 'Αρχική', path: '/' },
-    { name: 'Projects', path: '/projects' },
-    { name: 'Συμμετοχή', path: '/participate' },
-    { name: 'Για Φορείς', path: '/entities' },
-    { name: 'Ανοικτά Δεδομένα', path: '/open-data' },
-    { name: 'Προτείνετε', path: '/propose' },
-    { name: 'Νέα & Εκδηλώσεις', path: '/news' },
+    { name: t('nav.home'), path: '/' },
+    { name: t('nav.projects'), path: '/projects' },
+    { name: t('nav.participate'), path: '/participate' },
+    { name: t('nav.entities'), path: '/entities' },
+    { name: t('nav.data'), path: '/open-data' },
+    { name: t('nav.propose'), path: '/propose' },
+    { name: t('nav.news'), path: '/news' },
   ];
+
+  const toggleLanguage = () => {
+    const newLang = i18n.language.startsWith('el') ? 'en' : 'el';
+    i18n.changeLanguage(newLang);
+  };
 
   return (
     <>
@@ -52,6 +59,16 @@ const Navbar = () => {
                 {link.name}
               </NavLink>
             ))}
+            
+            <button 
+              onClick={toggleLanguage} 
+              className="btn btn-ghost" 
+              style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.4rem 0.8rem', fontWeight: 600 }}
+              aria-label="Toggle language"
+            >
+              <Globe size={18} />
+              {i18n.language.startsWith('el') ? 'EN' : 'EL'}
+            </button>
           </div>
 
           {/* Mobile toggle */}

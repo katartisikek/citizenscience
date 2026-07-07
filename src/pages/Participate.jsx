@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Download, HelpCircle, UserPlus, CheckCircle, Globe } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Participate = () => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', interests: '' });
   const [submitted, setSubmitted] = useState(false);
 
@@ -16,40 +18,40 @@ const Participate = () => {
       <section className="section" style={{ backgroundColor: 'var(--color-background)' }}>
         <div className="container">
           <div className="text-center mb-4">
-            <h1 style={{ color: 'var(--color-primary)' }}>Συμμετοχή Πολιτών</h1>
+            <h1 style={{ color: 'var(--color-primary)' }}>{t('participate.title')}</h1>
             <p style={{ maxWidth: '700px', margin: '0 auto', fontSize: '1.1rem', color: 'var(--color-text-light)' }}>
-              Γίνετε Citizen Scientist. Η συνεισφορά σας κάνει τη διαφορά στην προστασία του περιβάλλοντος.
+              {t('participate.subtitle')}
             </p>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '3rem', marginTop: '3rem' }}>
-            {/* Steps & App Download */}
+            {/* Steps */}
             <div>
-              <h2 className="mb-3">Πώς να ξεκινήσετε</h2>
+              <h2 className="mb-3">{t('participate.how_to')}</h2>
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginBottom: '2rem' }}>
                 <div style={{ display: 'flex', gap: '1rem' }}>
                   <UserPlus color="var(--color-primary)" size={24} style={{ flexShrink: 0 }} />
                   <div>
-                    <h4>1. Εγγραφείτε</h4>
-                    <p style={{ color: 'var(--color-text-light)', fontSize: '0.9rem' }}>Συμπληρώστε τη φόρμα για να ενημερώνεστε για δράσεις στην περιοχή σας.</p>
+                    <h4>{t('participate.step1_title')}</h4>
+                    <p style={{ color: 'var(--color-text-light)', fontSize: '0.9rem' }}>{t('participate.step1_desc')}</p>
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: '1rem' }}>
                   <Globe color="var(--color-secondary)" size={24} style={{ flexShrink: 0 }} />
                   <div>
-                    <h4>2. Μπείτε στην Πλατφόρμα</h4>
-                    <p style={{ color: 'var(--color-text-light)', fontSize: '0.9rem' }}>Επισκεφθείτε την πλατφόρμα μας από το κινητό ή τον υπολογιστή σας – δεν απαιτείται εγκατάσταση.</p>
+                    <h4>{t('participate.step2_title')}</h4>
+                    <p style={{ color: 'var(--color-text-light)', fontSize: '0.9rem' }}>{t('participate.step2_desc')}</p>
                     <button className="btn btn-secondary mt-1" style={{ fontSize: '0.85rem', padding: '0.5rem 1rem' }}>
-                      Σύνδεση
+                      {t('nav.login', 'Σύνδεση')}
                     </button>
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: '1rem' }}>
                   <CheckCircle color="var(--color-accent)" size={24} style={{ flexShrink: 0 }} />
                   <div>
-                    <h4>3. Συλλέξτε Δεδομένα</h4>
-                    <p style={{ color: 'var(--color-text-light)', fontSize: '0.9rem' }}>Ακολουθήστε τις οδηγίες του project και κάντε τις παρατηρήσεις σας στο πεδίο.</p>
+                    <h4>{t('participate.step3_title')}</h4>
+                    <p style={{ color: 'var(--color-text-light)', fontSize: '0.9rem' }}>{t('participate.step3_desc')}</p>
                   </div>
                 </div>
               </div>
@@ -72,7 +74,7 @@ const Participate = () => {
             {/* Registration Form */}
             <div>
               <div className="card" style={{ padding: '2rem', borderTop: '4px solid var(--color-primary)' }}>
-                <h2 className="mb-3">Φόρμα Εγγραφής Citizen Scientist</h2>
+                <h2 className="mb-3">{t('participate.form_title')}</h2>
                 <p style={{ color: 'var(--color-text-light)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
                   Εγγραφείτε στο δίκτυό μας για να ενημερώνεστε πρώτοι για νέα projects.
                 </p>

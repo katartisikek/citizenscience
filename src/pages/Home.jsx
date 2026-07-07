@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Users, Target, Globe, BookOpen, ChevronRight, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useData } from '../context/DataContext';
+import { useTranslation } from 'react-i18next';
 
 /* Scroll-reveal hook */
 function useReveal() {
@@ -67,6 +68,7 @@ const stats = [
 
 const Home = () => {
   const { settings } = useData();
+  const { t } = useTranslation();
 
   return (
     <div>
@@ -75,15 +77,15 @@ const Home = () => {
         <div className="container" style={{ maxWidth: 820 }}>
           <span className="overline">Η επιστήμη ανήκει σε όλους</span>
           <h1 style={{ marginBottom: '1.25rem' }}>
-            {settings.heroTitle}{' '}
-            <em style={{ fontStyle: 'italic', color: 'var(--primary-700)' }}>Η δύναμη της συμμετοχικής επιστήμης.</em>
+            {t('home.hero_title')}{' '}
+            <em style={{ fontStyle: 'italic', color: 'var(--primary-700)' }}>{t('home.hero_emphasis')}</em>
           </h1>
           <p className="text-lead animate-fade-in delay-100" style={{ margin: '0 auto 2.5rem' }}>
-            {settings.heroSubtitle}
+            {t('home.hero_subtitle')}
           </p>
           <div className="animate-fade-in delay-200" style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link to="/participate" className="btn btn-primary">
-              Γίνε Citizen Scientist <ChevronRight size={18} />
+              {t('home.btn_participate')} <ChevronRight size={18} />
             </Link>
             <Link to="/projects" className="btn btn-outline">
               Δες τα Projects

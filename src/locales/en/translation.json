@@ -1,0 +1,62 @@
+{
+  "nav": {
+    "home": "Home",
+    "projects": "Projects",
+    "participate": "Participate",
+    "entities": "For Entities",
+    "data": "Open Data",
+    "propose": "Propose",
+    "news": "News & Events",
+    "login": "Login"
+  },
+  "home": {
+    "hero_title": "Citizen Science",
+    "hero_emphasis": "The power of participatory science.",
+    "hero_subtitle": "We unite citizens, researchers, and entities to collect environmental data. Together, we better understand and protect our region.",
+    "btn_participate": "Citizen Participation",
+    "btn_propose": "Propose Project",
+    "stats": {
+      "projects": "Active Projects",
+      "participants": "Participants",
+      "observations": "Observations"
+    },
+    "features_title": "Why participate?",
+    "features": {
+      "impact": {
+        "title": "Real Impact",
+        "desc": "Your data helps real environmental studies and decision making."
+      },
+      "easy": {
+        "title": "Easy Participation",
+        "desc": "No special skills required. Recording is simple through our platform."
+      },
+      "community": {
+        "title": "Community",
+        "desc": "Join an active group of citizens with a shared interest in the environment."
+      }
+    }
+  },
+  "footer": {
+    "desc": "An initiative to enhance environmental research through active citizen participation.",
+    "quick_links": "Navigation",
+    "contact": "Contact",
+    "address": "Heraklion, Crete, Greece",
+    "newsletter": "NEWSLETTER",
+    "email_placeholder": "Your email...",
+    "rights": "© 2024 Citizen Science Crete. All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use"
+  },
+  "participate": {
+    "title": "Citizen Participation",
+    "subtitle": "Become a Citizen Scientist. Your contribution makes a difference in protecting the environment.",
+    "how_to": "How to get started",
+    "step1_title": "1. Register",
+    "step1_desc": "Fill out the form to stay informed about activities in your area.",
+    "step2_title": "2. Access the Platform",
+    "step2_desc": "Visit our platform from your mobile or computer – no installation required.",
+    "step3_title": "3. Collect Data",
+    "step3_desc": "Follow the project instructions and make your observations in the field.",
+    "form_title": "Citizen Scientist Registration Form"
+  }
+}
