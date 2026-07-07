@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 
 const statusColors = {
-  'Ενεργό':        { bg: 'var(--green-100)',  text: 'var(--green-700)',  border: 'var(--green-300)' },
+  'Ενεργό':        { bg: 'var(--primary-100)',  text: 'var(--primary-700)',  border: 'var(--primary-300)' },
   'Ολοκληρωμένο':  { bg: 'var(--gray-100)',   text: 'var(--gray-600)',   border: 'var(--gray-200)' },
 };
 
@@ -94,13 +94,13 @@ const Projects = () => {
                       marginBottom: '1.25rem', fontSize: '0.85rem', color: 'var(--color-text-light)',
                     }}>
                       <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                        <MapPin size={14} style={{ color: 'var(--green-500)' }} /> {project.area}
+                        <MapPin size={14} style={{ color: 'var(--primary-500)' }} /> {project.area}
                       </span>
                       <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                        <Calendar size={14} style={{ color: 'var(--green-500)' }} /> {project.timeline}
+                        <Calendar size={14} style={{ color: 'var(--primary-500)' }} /> {project.timeline}
                       </span>
                       <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                        <Users size={14} style={{ color: 'var(--green-500)' }} /> {project.participants} άτομα
+                        <Users size={14} style={{ color: 'var(--primary-500)' }} /> {project.participants} άτομα
                       </span>
                     </div>
 

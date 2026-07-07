@@ -2,9 +2,9 @@ import { Calendar as CalendarIcon, Clock, MapPin, ChevronRight } from 'lucide-re
 import { useData } from '../context/DataContext';
 
 const typeColors = {
-  'Νέα':        { bg: 'var(--green-100)',  text: 'var(--green-700)' },
-  'Εκδήλωση':   { bg: 'var(--blue-200)',   text: 'var(--blue-800)' },
-  'Ανακοίνωση': { bg: 'var(--earth-200)',  text: 'var(--earth-700)' },
+  'Νέα':        { bg: 'var(--primary-100)',  text: 'var(--primary-700)' },
+  'Εκδήλωση':   { bg: 'var(--secondary-200)',   text: 'var(--secondary-800)' },
+  'Ανακοίνωση': { bg: 'var(--accent-200)',  text: 'var(--accent-700)' },
 };
 
 const upcomingEvents = [
@@ -69,7 +69,7 @@ const News = () => {
                         <p style={{ color: 'var(--color-text)', marginBottom: '1.25rem', lineHeight: 1.7, fontSize: '0.95rem' }}>
                           {item.content}
                         </p>
-                        <button className="btn btn-ghost" style={{ padding: '0.5rem 0', color: 'var(--green-700)', fontWeight: 600 }}>
+                        <button className="btn btn-ghost" style={{ padding: '0.5rem 0', color: 'var(--primary-700)', fontWeight: 600 }}>
                           Διαβάστε περισσότερα <ChevronRight size={16} />
                         </button>
                       </div>
@@ -107,17 +107,17 @@ const News = () => {
                       {/* Date chip */}
                       <div style={{
                         minWidth: 52, height: 52,
-                        background: 'var(--green-100)',
-                        border: '1px solid var(--green-300)',
+                        background: 'var(--primary-100)',
+                        border: '1px solid var(--primary-300)',
                         borderRadius: 'var(--radius-md)',
                         display: 'flex', flexDirection: 'column',
                         alignItems: 'center', justifyContent: 'center',
                         flexShrink: 0,
                       }}>
-                        <span style={{ fontFamily: "'DM Serif Display', serif", fontSize: '1.2rem', color: 'var(--green-700)', lineHeight: 1 }}>
+                        <span style={{ fontFamily: "'DM Serif Display', serif", fontSize: '1.2rem', color: 'var(--primary-700)', lineHeight: 1 }}>
                           {ev.date}
                         </span>
-                        <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--green-500)', letterSpacing: '0.05em' }}>
+                        <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--primary-500)', letterSpacing: '0.05em' }}>
                           {ev.month}
                         </span>
                       </div>

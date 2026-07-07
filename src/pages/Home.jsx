@@ -76,7 +76,7 @@ const Home = () => {
           <span className="overline">Η επιστήμη ανήκει σε όλους</span>
           <h1 style={{ marginBottom: '1.25rem' }}>
             {settings.heroTitle}{' '}
-            <em style={{ fontStyle: 'italic', color: 'var(--green-700)' }}>Μαζί με εσένα.</em>
+            <em style={{ fontStyle: 'italic', color: 'var(--primary-700)' }}>Μαζί με εσένα.</em>
           </h1>
           <p className="text-lead animate-fade-in delay-100" style={{ margin: '0 auto 2.5rem' }}>
             {settings.heroSubtitle}
@@ -171,7 +171,7 @@ const Home = () => {
                     <span style={{
                       fontFamily: "'DM Serif Display', serif",
                       fontSize: '1.6rem',
-                      color: 'var(--green-300)',
+                      color: 'var(--primary-300)',
                       lineHeight: 1,
                       flexShrink: 0,
                       marginTop: '0.1rem',
@@ -196,7 +196,7 @@ const Home = () => {
         <section className="section-sm">
           <div className="container">
             <div style={{
-              background: 'var(--green-700)',
+              background: 'var(--primary-700)',
               borderRadius: 'var(--radius-xl)',
               padding: '3.5rem 4rem',
               display: 'flex',
@@ -213,7 +213,7 @@ const Home = () => {
               </div>
               <Link to="/participate" className="btn" style={{
                 background: 'white',
-                color: 'var(--green-700)',
+                color: 'var(--primary-700)',
                 whiteSpace: 'nowrap',
                 flexShrink: 0,
               }}>

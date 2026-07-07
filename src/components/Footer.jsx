@@ -21,7 +21,7 @@ const Footer = () => {
             <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', marginBottom: '1.25rem', textDecoration: 'none' }}>
               <div className="icon-container" style={{
                 width: 38, height: 38, borderRadius: 8, padding: 0,
-                background: 'linear-gradient(135deg, var(--green-500), var(--green-700))',
+                background: 'linear-gradient(135deg, var(--primary-500), var(--primary-700))',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
                 <Leaf size={20} />
@@ -33,7 +33,7 @@ const Footer = () => {
                 lineHeight: 1.2,
               }}>
                 Citizen Science<br />
-                <span style={{ color: 'var(--green-300)' }}>Crete</span>
+                <span style={{ color: 'var(--primary-300)' }}>Crete</span>
               </span>
             </Link>
             <p style={{ fontSize: '0.9rem', lineHeight: 1.7, maxWidth: 280, marginBottom: '1.5rem' }}>
@@ -78,7 +78,7 @@ const Footer = () => {
                 { icon: <MapPin size={16} />, text: 'Ηράκλειο Κρήτης, Ελλάδα', href: null },
               ].map((c, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.625rem', fontSize: '0.9rem' }}>
-                  <span style={{ color: 'var(--green-300)', marginTop: '0.15rem', flexShrink: 0 }}>{c.icon}</span>
+                  <span style={{ color: 'var(--primary-300)', marginTop: '0.15rem', flexShrink: 0 }}>{c.icon}</span>
                   {c.href
                     ? <a href={c.href} style={{ color: 'rgba(255,255,255,0.7)' }}>{c.text}</a>
                     : <span style={{ color: 'rgba(255,255,255,0.7)' }}>{c.text}</span>
@@ -106,7 +106,7 @@ const Footer = () => {
                     outline: 'none', fontFamily: 'inherit',
                     minWidth: 0,
                   }}
-                  onFocus={e => e.target.style.borderColor = 'var(--green-400)'}
+                  onFocus={e => e.target.style.borderColor = 'var(--primary-400)'}
                   onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.15)'}
                 />
                 <button type="submit" className="btn btn-primary" style={{ padding: '0.6rem 1rem', fontSize: '0.875rem', flexShrink: 0 }}>
