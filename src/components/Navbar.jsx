@@ -1,0 +1,91 @@
+import { useState, useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
+import { Menu, X, Leaf } from 'lucide-react';
+
+const Navbar = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = isMobileOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [isMobileOpen]);
+
+  const navLinks = [
+    { name: 'Αρχική', path: '/' },
+    { name: 'Projects', path: '/projects' },
+    { name: 'Συμμετοχή', path: '/participate' },
+    { name: 'Για Φορείς', path: '/entities' },
+    { name: 'Ανοικτά Δεδομένα', path: '/open-data' },
+    { name: 'Προτείνετε', path: '/propose' },
+    { name: 'Νέα & Εκδηλώσεις', path: '/news' },
+  ];
+
+  return (
+    <>
+      <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
+        <div className="nav-container">
+          {/* Logo */}
+          <NavLink to="/" className="nav-logo" onClick={() => setIsMobileOpen(false)}>
+            <div className="icon-container" style={{ width: 36, height: 36, borderRadius: 8, padding: 0 }}>
+              <Leaf size={20} />
+            </div>
+            <span>Citizen Science Crete</span>
+          </NavLink>
+
+          {/* Desktop links */}
+          <div className="nav-links">
+            {navLinks.map(link => (
+              <NavLink
+                key={link.path}
+                to={link.path}
+                end={link.path === '/'}
+                className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}
+              >
+                {link.name}
+              </NavLink>
+            ))}
+          </div>
+
+          {/* Mobile toggle */}
+          <button
+            className="mobile-menu-btn"
+            onClick={() => setIsMobileOpen(!isMobileOpen)}
+            aria-label={isMobileOpen ? 'Κλείσιμο μενού' : 'Άνοιγμα μενού'}
+          >
+            {isMobileOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile overlay menu */}
+      {isMobileOpen && (
+        <div className="nav-links mobile-open">
+          <button className="mobile-close-btn" onClick={() => setIsMobileOpen(false)}>
+            <X size={22} />
+          </button>
+          {navLinks.map(link => (
+            <NavLink
+              key={link.path}
+              to={link.path}
+              end={link.path === '/'}
+              className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}
+              onClick={() => setIsMobileOpen(false)}
+            >
+              {link.name}
+            </NavLink>
+          ))}
+        </div>
+      )}
+    </>
+  );
+};
+
+export default Navbar;
