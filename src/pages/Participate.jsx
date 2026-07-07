@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Download, HelpCircle, UserPlus, CheckCircle } from 'lucide-react';
+import { Download, HelpCircle, UserPlus, CheckCircle, Globe } from 'lucide-react';
 
 const Participate = () => {
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', interests: '' });
@@ -36,12 +36,12 @@ const Participate = () => {
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: '1rem' }}>
-                  <Download color="var(--color-secondary)" size={24} style={{ flexShrink: 0 }} />
+                  <Globe color="var(--color-secondary)" size={24} style={{ flexShrink: 0 }} />
                   <div>
-                    <h4>2. Κατεβάστε την Εφαρμογή</h4>
-                    <p style={{ color: 'var(--color-text-light)', fontSize: '0.9rem' }}>Αποκτήστε την εφαρμογή μας για κινητά για να ανεβάζετε παρατηρήσεις εύκολα.</p>
+                    <h4>2. Μπείτε στην Πλατφόρμα</h4>
+                    <p style={{ color: 'var(--color-text-light)', fontSize: '0.9rem' }}>Επισκεφθείτε την πλατφόρμα μας από το κινητό ή τον υπολογιστή σας – δεν απαιτείται εγκατάσταση.</p>
                     <button className="btn btn-secondary mt-1" style={{ fontSize: '0.85rem', padding: '0.5rem 1rem' }}>
-                      Λήψη App
+                      Σύνδεση
                     </button>
                   </div>
                 </div>
