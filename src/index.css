@@ -444,13 +444,12 @@ textarea.form-control {
    NAVBAR
 ──────────────────────────────────────────────── */
 .navbar {
-  position: sticky;
-  top: var(--space-5);
+  position: relative;
   z-index: 100;
   width: 92%;
   max-width: 1160px;
   margin: 0 auto var(--space-8);
-  padding: 0.65rem var(--space-5);
+  padding: 0.3rem var(--space-5);
   background: rgba(255, 255, 255, 0.88);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
@@ -468,7 +467,6 @@ textarea.form-control {
 .nav-container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: var(--space-4);
 }
 
@@ -484,17 +482,7 @@ textarea.form-control {
   flex-shrink: 0;
 }
 
-.nav-logo .icon-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius-sm);
-  background: var(--gradient-primary);
-  color: var(--white);
-  flex-shrink: 0;
-}
+
 
 .nav-links {
   display: flex;
@@ -504,7 +492,7 @@ textarea.form-control {
 }
 
 .nav-link {
-  font-size: 0.88rem;
+  font-size: 1.08rem;
   font-weight: 500;
   color: var(--color-text);
   padding: var(--space-2) var(--space-3);

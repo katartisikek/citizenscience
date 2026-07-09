@@ -45,13 +45,11 @@ const Navbar = () => {
               src="/logoCitizen3.png" 
               alt="Citizen Science Crete Logo" 
               style={{ 
-                height: 40, 
+                height: 150, 
                 width: 'auto', 
-                borderRadius: 8,
                 objectFit: 'contain'
               }} 
             />
-            <span>Citizen Science Crete</span>
           </NavLink>
 
           {/* Desktop links */}
