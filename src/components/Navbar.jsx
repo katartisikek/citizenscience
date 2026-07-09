@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Menu, X, Leaf, Globe } from 'lucide-react';
+import { Menu, X, Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const Navbar = () => {
@@ -41,9 +41,16 @@ const Navbar = () => {
         <div className="nav-container">
           {/* Logo */}
           <NavLink to="/" className="nav-logo" onClick={() => setIsMobileOpen(false)}>
-            <div className="icon-container" style={{ width: 36, height: 36, borderRadius: 8, padding: 0 }}>
-              <Leaf size={20} />
-            </div>
+            <img 
+              src="/logoCitizen3.png" 
+              alt="Citizen Science Crete Logo" 
+              style={{ 
+                height: 40, 
+                width: 'auto', 
+                borderRadius: 8,
+                objectFit: 'contain'
+              }} 
+            />
             <span>Citizen Science Crete</span>
           </NavLink>
 
