@@ -16,11 +16,20 @@ const Login = () => {
     setLoading(true);
     try {
       if (!isSupabaseConfigured) {
-        setError('Το Supabase δεν είναι ρυθμισμένο. Προσθέστε VITE_SUPABASE_URL και VITE_SUPABASE_ANON_KEY στο .env');
+        const onLocal = typeof window !== 'undefined' && /localhost|127\.0\.0\.1/.test(window.location.hostname);
+        setError(
+          onLocal
+            ? 'Το Supabase δεν είναι ρυθμισμένο τοπικά. Βεβαιωθείτε ότι υπάρχει .env με VITE_SUPABASE_URL και VITE_SUPABASE_ANON_KEY και κάντε restart το npm run dev.'
+            : 'Το Supabase δεν είναι ρυθμισμένο στο live site. Προσθέστε VITE_SUPABASE_URL και VITE_SUPABASE_ANON_KEY στις Environment Variables του Vercel και κάντε Redeploy.'
+        );
         return;
       }
-      await signIn(form);
-      navigate('/profile');
+      const { profile: loggedProfile } = await signIn(form);
+      if (loggedProfile?.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/profile');
+      }
     } catch (err) {
       setError(err.message || 'Σφάλμα σύνδεσης');
     } finally {

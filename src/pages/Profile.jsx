@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { User, MapPin, LogOut, ClipboardList, Camera } from 'lucide-react';
+import { User, MapPin, LogOut, ClipboardList, Camera, Phone } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import { summarizeObservationData } from '../lib/dataTypes';
@@ -49,6 +49,11 @@ const Profile = () => {
             <div style={{ flex: 1 }}>
               <h1 style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>{profile?.full_name || user.email}</h1>
               <p style={{ color: 'var(--color-text-light)', margin: 0 }}>{user.email}</p>
+              {profile?.phone && (
+                <p style={{ color: 'var(--color-text-light)', margin: '0.25rem 0 0', display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.95rem' }}>
+                  <Phone size={14} /> {profile.phone}
+                </p>
+              )}
               <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem', flexWrap: 'wrap', fontSize: '0.9rem' }}>
                 <span style={{ background: 'var(--primary-100)', color: 'var(--primary-700)', padding: '0.2rem 0.75rem', borderRadius: 'var(--radius-full)' }}>
                   {roleLabels[profile?.role] || 'Πολίτης'}

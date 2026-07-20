@@ -16,8 +16,11 @@ const Login = () => {
     setLoading(true);
     try {
       if (isSupabaseConfigured) {
-        await signIn(form);
-        sessionStorage.setItem('admin_auth', 'true');
+        const { profile: loggedProfile } = await signIn(form);
+        if (loggedProfile?.role !== 'admin') {
+          setError('Αυτός ο λογαριασμός δεν έχει δικαιώματα διαχειριστή.');
+          return;
+        }
         navigate('/admin');
       } else {
         // Demo fallback when Supabase not configured

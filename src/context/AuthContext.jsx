@@ -42,16 +42,43 @@ export const AuthProvider = ({ children }) => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async ({ email, password, fullName, role = 'citizen', area = '' }) => {
+  const signUp = async ({
+    email,
+    password,
+    firstName = '',
+    lastName = '',
+    fullName = '',
+    phone = '',
+    role = 'citizen',
+    area = '',
+  }) => {
     if (!supabase) throw new Error('Supabase not configured');
+    const composedName = [firstName, lastName].filter(Boolean).join(' ').trim() || fullName;
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { full_name: fullName, role } },
+      options: {
+        data: {
+          first_name: firstName,
+          last_name: lastName,
+          full_name: composedName,
+          phone,
+          role,
+          area,
+        },
+      },
     });
     if (error) throw error;
-    if (data.user && area) {
-      await supabase.from('profiles').update({ area }).eq('id', data.user.id);
+    if (data.user) {
+      await supabase.from('profiles').update({
+        full_name: composedName,
+        phone,
+        area,
+        role: ['citizen', 'researcher', 'entity'].includes(role) ? role : 'citizen',
+      }).eq('id', data.user.id);
+      const profileData = await fetchProfile(data.user.id);
+      setUser(data.user);
+      setProfile(profileData);
     }
     return data;
   };
@@ -60,7 +87,10 @@ export const AuthProvider = ({ children }) => {
     if (!supabase) throw new Error('Supabase not configured');
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
-    return data;
+    const profileData = data.user ? await fetchProfile(data.user.id) : null;
+    setUser(data.user ?? null);
+    setProfile(profileData);
+    return { ...data, profile: profileData };
   };
 
   const signOut = async () => {

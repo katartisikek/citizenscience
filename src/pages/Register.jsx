@@ -1,14 +1,23 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Leaf, Mail, Lock, User, MapPin } from 'lucide-react';
+import { Leaf, Mail, Lock, User, Phone, Briefcase } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const Register = () => {
   const { signUp, isSupabaseConfigured } = useAuth();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ fullName: '', email: '', password: '', area: '', role: 'citizen' });
+  const [form, setForm] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    role: 'citizen',
+    password: '',
+  });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const setField = (key) => (e) => setForm((prev) => ({ ...prev, [key]: e.target.value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,35 +47,79 @@ const Register = () => {
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label className="form-label"><User size={14} /> Ονοματεπώνυμο</label>
-            <input type="text" className="form-control" required value={form.fullName}
-              onChange={e => setForm({ ...form, fullName: e.target.value })} />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+            <div className="form-group">
+              <label className="form-label"><User size={14} /> Όνομα</label>
+              <input
+                type="text"
+                className="form-control"
+                required
+                autoComplete="given-name"
+                value={form.firstName}
+                onChange={setField('firstName')}
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label"><User size={14} /> Επώνυμο</label>
+              <input
+                type="text"
+                className="form-control"
+                required
+                autoComplete="family-name"
+                value={form.lastName}
+                onChange={setField('lastName')}
+              />
+            </div>
           </div>
+
           <div className="form-group">
             <label className="form-label"><Mail size={14} /> Email</label>
-            <input type="email" className="form-control" required value={form.email}
-              onChange={e => setForm({ ...form, email: e.target.value })} />
+            <input
+              type="email"
+              className="form-control"
+              required
+              autoComplete="email"
+              value={form.email}
+              onChange={setField('email')}
+            />
           </div>
+
           <div className="form-group">
-            <label className="form-label"><Lock size={14} /> Κωδικός</label>
-            <input type="password" className="form-control" required minLength={6} value={form.password}
-              onChange={e => setForm({ ...form, password: e.target.value })} />
+            <label className="form-label"><Phone size={14} /> Τηλέφωνο</label>
+            <input
+              type="tel"
+              className="form-control"
+              required
+              autoComplete="tel"
+              inputMode="tel"
+              placeholder="π.χ. 69xxxxxxxx"
+              value={form.phone}
+              onChange={setField('phone')}
+            />
           </div>
+
           <div className="form-group">
-            <label className="form-label"><MapPin size={14} /> Περιοχή / Δήμος</label>
-            <input type="text" className="form-control" value={form.area}
-              onChange={e => setForm({ ...form, area: e.target.value })} />
-          </div>
-          <div className="form-group">
-            <label className="form-label">Ρόλος</label>
-            <select className="form-control" value={form.role}
-              onChange={e => setForm({ ...form, role: e.target.value })}>
+            <label className="form-label"><Briefcase size={14} /> Ιδιότητα</label>
+            <select className="form-control" required value={form.role} onChange={setField('role')}>
               <option value="citizen">Πολίτης / Εθελοντής</option>
               <option value="researcher">Ερευνητής</option>
               <option value="entity">Φορέας / Δήμος</option>
             </select>
           </div>
+
+          <div className="form-group">
+            <label className="form-label"><Lock size={14} /> Κωδικός</label>
+            <input
+              type="password"
+              className="form-control"
+              required
+              minLength={6}
+              autoComplete="new-password"
+              value={form.password}
+              onChange={setField('password')}
+            />
+          </div>
+
           {error && <p style={{ color: '#c05530', fontSize: '0.9rem', marginBottom: '1rem' }}>{error}</p>}
           <button type="submit" className="btn btn-primary" style={{ width: '100%' }} disabled={loading}>
             {loading ? 'Εγγραφή...' : 'Δημιουργία Λογαριασμού'}

@@ -8,6 +8,7 @@ CREATE TABLE profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   full_name TEXT,
   email TEXT,
+  phone TEXT,
   role TEXT NOT NULL DEFAULT 'citizen' CHECK (role IN ('citizen', 'researcher', 'entity', 'admin')),
   area TEXT,
   avatar_url TEXT,
@@ -122,16 +123,25 @@ SET search_path = public
 AS $$
 DECLARE
   requested_role TEXT := COALESCE(NEW.raw_user_meta_data->>'role', 'citizen');
+  first_name TEXT := COALESCE(NEW.raw_user_meta_data->>'first_name', '');
+  last_name TEXT := COALESCE(NEW.raw_user_meta_data->>'last_name', '');
+  composed_name TEXT := trim(both ' ' from (first_name || ' ' || last_name));
 BEGIN
-  INSERT INTO public.profiles (id, full_name, email, role)
+  INSERT INTO public.profiles (id, full_name, email, role, phone, area)
   VALUES (
     NEW.id,
-    COALESCE(NEW.raw_user_meta_data->>'full_name', ''),
+    COALESCE(
+      NULLIF(composed_name, ''),
+      NEW.raw_user_meta_data->>'full_name',
+      ''
+    ),
     NEW.email,
     CASE
       WHEN requested_role IN ('citizen', 'researcher', 'entity') THEN requested_role
       ELSE 'citizen'
-    END
+    END,
+    COALESCE(NEW.raw_user_meta_data->>'phone', ''),
+    COALESCE(NEW.raw_user_meta_data->>'area', '')
   )
   ON CONFLICT (id) DO NOTHING;
   RETURN NEW;
