@@ -1,15 +1,21 @@
-import { useParams, Link } from 'react-router-dom';
-import { MapPin, Calendar, Users, Target, Camera, ArrowLeft } from 'lucide-react';
+import { useState } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { MapPin, Calendar, Users, Target, Camera, ArrowLeft, UserPlus, CheckCircle } from 'lucide-react';
 import { useData } from '../context/DataContext';
+import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 
 const ProjectDetail = () => {
   const { id } = useParams();
-  const { projects, loading } = useData();
+  const navigate = useNavigate();
+  const { projects, loading, joinProject, isMemberOf } = useData();
+  const { user } = useAuth();
   const { t, i18n } = useTranslation();
+  const [joining, setJoining] = useState(false);
+  const [error, setError] = useState('');
 
-  const project = projects.find(p => String(p.id) === String(id));
-  const tData = (item, key) => i18n.language.startsWith('en') && item?.[`${key}_en`] ? item[`${key}_en`] : item?.[key];
+  const project = projects.find((p) => String(p.id) === String(id));
+  const tData = (item, key) => (i18n.language.startsWith('en') && item?.[`${key}_en`] ? item[`${key}_en`] : item?.[key]);
 
   if (loading) return <div className="section text-center">Φόρτωση...</div>;
 
@@ -23,6 +29,23 @@ const ProjectDetail = () => {
   }
 
   const isActive = project.status === 'Ενεργό';
+  const member = user ? isMemberOf(project.id, user.id) : false;
+
+  const handleJoin = async () => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+    setError('');
+    setJoining(true);
+    try {
+      await joinProject(project.id, user.id);
+    } catch (err) {
+      setError(err.message || 'Σφάλμα εγγραφής');
+    } finally {
+      setJoining(false);
+    }
+  };
 
   return (
     <div className="animate-fade-in">
@@ -56,11 +79,25 @@ const ProjectDetail = () => {
                 </span>
               </div>
 
-              {isActive && (
-                <Link to={`/projects/${project.id}/collect`} className="btn btn-primary">
-                  <Camera size={18} /> Καταγραφή Παρατήρησης
-                </Link>
-              )}
+              {error && <p style={{ color: '#c05530', marginBottom: '1rem' }}>{error}</p>}
+
+              <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                {isActive && member && (
+                  <Link to={`/projects/${project.id}/collect`} className="btn btn-primary">
+                    <Camera size={18} /> Καταγραφή Παρατήρησης
+                  </Link>
+                )}
+                {isActive && !member && (
+                  <button type="button" className="btn btn-primary" onClick={handleJoin} disabled={joining}>
+                    <UserPlus size={18} /> {joining ? 'Εγγραφή...' : 'Εγγραφή στο Project'}
+                  </button>
+                )}
+                {member && (
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: 'var(--primary-700)', fontWeight: 600 }}>
+                    <CheckCircle size={18} /> Είστε μέλος
+                  </span>
+                )}
+              </div>
             </div>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect, useContext, useCallback } from 'react';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { DEFAULT_DATA_TYPES } from '../lib/dataTypes';
+import { useAuth } from './AuthContext';
 
 const DataContext = createContext();
 
@@ -121,6 +122,7 @@ const mapSettingsToDb = (s) => ({
 });
 
 export const DataProvider = ({ children }) => {
+  const { user } = useAuth();
   const [projects, setProjects] = useState([]);
   const [news, setNews] = useState([]);
   const [settings, setSettings] = useState(initialSettings);
@@ -128,6 +130,7 @@ export const DataProvider = ({ children }) => {
   const [proposals, setProposals] = useState([]);
   const [observations, setObservations] = useState([]);
   const [profiles, setProfiles] = useState([]);
+  const [memberships, setMemberships] = useState([]);
   const [loading, setLoading] = useState(true);
   const [usingLocal, setUsingLocal] = useState(!isSupabaseConfigured);
 
@@ -139,8 +142,27 @@ export const DataProvider = ({ children }) => {
     setProposals(JSON.parse(localStorage.getItem('cs_proposals') || '[]'));
     setObservations(JSON.parse(localStorage.getItem('cs_observations') || '[]'));
     setProfiles(JSON.parse(localStorage.getItem('cs_profiles') || '[]'));
+    setMemberships(JSON.parse(localStorage.getItem('cs_memberships') || '[]'));
     setUsingLocal(true);
   }, []);
+
+  const loadMemberships = useCallback(async (userId) => {
+    if (!userId) {
+      setMemberships([]);
+      return;
+    }
+    if (!supabase || usingLocal) {
+      const all = JSON.parse(localStorage.getItem('cs_memberships') || '[]');
+      setMemberships(all.filter((m) => m.user_id === userId));
+      return;
+    }
+    const { data, error } = await supabase
+      .from('project_members')
+      .select('*')
+      .eq('user_id', userId)
+      .order('joined_at', { ascending: false });
+    if (!error) setMemberships(data || []);
+  }, [usingLocal]);
 
   const loadFromSupabase = useCallback(async () => {
     if (!supabase) { loadLocal(); return; }
@@ -172,6 +194,10 @@ export const DataProvider = ({ children }) => {
   useEffect(() => {
     loadFromSupabase().finally(() => setLoading(false));
   }, [loadFromSupabase]);
+
+  useEffect(() => {
+    loadMemberships(user?.id);
+  }, [user?.id, loadMemberships, usingLocal]);
 
   useEffect(() => {
     if (!usingLocal) return;
@@ -207,6 +233,13 @@ export const DataProvider = ({ children }) => {
     if (!usingLocal) return;
     localStorage.setItem('cs_profiles', JSON.stringify(profiles));
   }, [profiles, usingLocal]);
+
+  useEffect(() => {
+    if (!usingLocal) return;
+    const others = JSON.parse(localStorage.getItem('cs_memberships') || '[]')
+      .filter((m) => m.user_id !== user?.id);
+    localStorage.setItem('cs_memberships', JSON.stringify([...others, ...memberships]));
+  }, [memberships, usingLocal, user?.id]);
 
   const addProject = async (project) => {
     const payload = {
@@ -357,12 +390,41 @@ export const DataProvider = ({ children }) => {
   const uploadPhoto = async (file, userId) => uploadFile(file, userId, 'photos');
 
   const joinProject = async (projectId, userId) => {
-    if (usingLocal || !supabase) return;
-    await supabase.from('project_members').upsert(
-      { project_id: projectId, user_id: userId },
-      { onConflict: 'project_id,user_id' }
-    );
+    if (!userId) throw new Error('Απαιτείται σύνδεση');
+    const row = {
+      project_id: projectId,
+      user_id: userId,
+      joined_at: new Date().toISOString(),
+    };
+    if (usingLocal || !supabase) {
+      setMemberships((prev) => {
+        if (prev.some((m) => String(m.project_id) === String(projectId) && m.user_id === userId)) return prev;
+        return [row, ...prev];
+      });
+      return row;
+    }
+    const { data, error } = await supabase
+      .from('project_members')
+      .upsert(
+        { project_id: projectId, user_id: userId },
+        { onConflict: 'project_id,user_id' }
+      )
+      .select()
+      .single();
+    if (error) throw error;
+    setMemberships((prev) => {
+      const without = prev.filter((m) => !(String(m.project_id) === String(projectId) && m.user_id === userId));
+      return [data || row, ...without];
+    });
+    return data || row;
   };
+
+  const isMemberOf = (projectId, userId = user?.id) =>
+    Boolean(userId && memberships.some((m) => String(m.project_id) === String(projectId) && m.user_id === userId));
+
+  const myProjects = projects.filter((p) =>
+    memberships.some((m) => String(m.project_id) === String(p.id) && m.user_id === user?.id)
+  );
 
   const updateUserRole = async (userId, role) => {
     if (usingLocal) {
@@ -395,7 +457,8 @@ export const DataProvider = ({ children }) => {
       proposals, addProposal, updateProposalStatus,
       observations, addObservation, updateObservationStatus,
       profiles, updateUserRole, updateProfileFields,
-      uploadPhoto, uploadFile, joinProject,
+      memberships, myProjects, joinProject, isMemberOf, loadMemberships,
+      uploadPhoto, uploadFile,
       loading, usingLocal, refresh,
     }}>
       {children}
