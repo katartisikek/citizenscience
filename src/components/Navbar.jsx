@@ -65,9 +65,10 @@ const Navbar = () => {
             <NavLink
               to={user ? '/profile' : '/login'}
               className="nav-action"
+              title={user ? t('nav.profile', 'Προφίλ') : t('nav.login', 'Είσοδος')}
             >
               <User size={20} />
-              <span>{user ? t('nav.profile', 'Προφίλ') : t('nav.login', 'Είσοδος')}</span>
+              <span>{t('nav.account', 'Λογαριασμός')}</span>
             </NavLink>
             <button
               type="button"
@@ -111,7 +112,7 @@ const Navbar = () => {
             className="nav-link"
             onClick={() => setIsMobileOpen(false)}
           >
-            {user ? t('nav.profile', 'Προφίλ') : t('nav.login', 'Είσοδος')}
+            {t('nav.account', 'Λογαριασμός')}
           </NavLink>
           <button
             type="button"

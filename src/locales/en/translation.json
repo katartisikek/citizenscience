@@ -7,7 +7,9 @@
     "data": "Open Data",
     "propose": "Propose",
     "news": "News & Events",
-    "login": "Login"
+    "login": "Login",
+    "profile": "Profile",
+    "account": "Account"
   },
   "home": {
     "hero_overline": "Science belongs to everyone",
