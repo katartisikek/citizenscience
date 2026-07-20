@@ -67,10 +67,14 @@ const stats = [
 ];
 
 const Home = () => {
-  const { settings } = useData();
+  const { settings, loading } = useData();
   const { t, i18n } = useTranslation();
 
   const tData = (obj, key) => i18n.language.startsWith('en') && obj[`${key}_en`] ? obj[`${key}_en`] : obj[key];
+
+  if (loading) {
+    return <div className="section text-center" style={{ minHeight: '50vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Φόρτωση...</div>;
+  }
 
   return (
     <div>
@@ -100,10 +104,10 @@ const Home = () => {
         <div className="container section-sm">
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-            gap: '2rem',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+            gap: '1.5rem',
             textAlign: 'center',
-            padding: '2.5rem 3rem',
+            padding: 'clamp(1.5rem, 4vw, 2.5rem) clamp(1rem, 4vw, 3rem)',
             background: 'var(--color-surface)',
             borderRadius: 'var(--radius-xl)',
             border: '1px solid var(--color-border)',
@@ -156,8 +160,8 @@ const Home = () => {
 
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-              gap: '1rem',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(min(280px, 100%), 1fr))',
+              gap: '0.75rem',
             }}>
               {principles.map((principle, index) => {
                 const [title, rest] = principle.split(' — ');
@@ -201,11 +205,11 @@ const Home = () => {
             <div style={{
               background: 'var(--primary-700)',
               borderRadius: 'var(--radius-xl)',
-              padding: '3.5rem 4rem',
+              padding: 'clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 5vw, 4rem)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              gap: '2rem',
+              gap: '1.5rem',
               flexWrap: 'wrap',
             }}>
               <div>
@@ -244,16 +248,19 @@ const Home = () => {
             }}>
               {['ΙΤΕ', 'ΤΕΙ Κρήτης', 'Δήμος Ηρακλείου', 'ΕΛΚΕΘΕ'].map(name => (
                 <div key={name} style={{
-                  padding: '1.25rem 2rem',
+                  padding: '1rem 1.5rem',
                   background: 'var(--color-surface)',
                   border: '1px solid var(--color-border)',
                   borderRadius: 'var(--radius-lg)',
                   fontFamily: "'DM Serif Display', serif",
-                  fontSize: '1.05rem',
+                  fontSize: '1rem',
                   color: 'var(--color-text-dark)',
                   transition: 'all var(--t-base)',
                   cursor: 'default',
                   boxShadow: 'var(--shadow-xs)',
+                  flex: '1 1 auto',
+                  textAlign: 'center',
+                  minWidth: '120px',
                 }}
                 onMouseOver={e => { e.currentTarget.style.boxShadow = 'var(--shadow-md)'; e.currentTarget.style.transform = 'translateY(-3px)'; }}
                 onMouseOut={e => { e.currentTarget.style.boxShadow = 'var(--shadow-xs)'; e.currentTarget.style.transform = 'translateY(0)'; }}

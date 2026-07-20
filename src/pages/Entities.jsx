@@ -69,7 +69,7 @@ const Entities = () => {
             background: 'var(--color-surface)',
             border: '1px solid var(--color-border)',
             borderRadius: 'var(--radius-xl)',
-            padding: '3rem',
+            padding: 'clamp(1.5rem, 4vw, 3rem)',
             boxShadow: 'var(--shadow-sm)',
           }}>
             <div style={{ marginBottom: '2rem' }}>
@@ -81,7 +81,7 @@ const Entities = () => {
             </div>
 
             <form onSubmit={e => e.preventDefault()}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(220px, 100%), 1fr))', gap: '1rem' }}>
                 <div className="form-group">
                   <label className="form-label">{t('entities.f_org', 'Όνομα Φορέα / Οργανισμού *')}</label>
                   <input type="text" className="form-control" placeholder={t('entities.f_org_ph', 'π.χ. Δήμος Ηρακλείου')} required />

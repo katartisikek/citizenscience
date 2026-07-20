@@ -1,20 +1,37 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Leaf, Lock } from 'lucide-react';
+import { Leaf, Mail, Lock } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 const Login = () => {
-  const [password, setPassword] = useState('');
+  const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { signIn, isSupabaseConfigured } = useAuth();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Simple mock authentication for demo
-    if (password === 'admin123') {
-      sessionStorage.setItem('admin_auth', 'true');
-      navigate('/admin');
-    } else {
-      setError('Λάθος κωδικός. Δοκιμάστε: admin123');
+    setError('');
+    setLoading(true);
+    try {
+      if (isSupabaseConfigured) {
+        await signIn(form);
+        sessionStorage.setItem('admin_auth', 'true');
+        navigate('/admin');
+      } else {
+        // Demo fallback when Supabase not configured
+        if (form.password === 'admin123') {
+          sessionStorage.setItem('admin_auth', 'true');
+          navigate('/admin');
+        } else {
+          setError('Λάθος κωδικός.');
+        }
+      }
+    } catch (err) {
+      setError(err.message || 'Σφάλμα σύνδεσης');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -26,30 +43,32 @@ const Login = () => {
         <p style={{ color: 'var(--color-text-light)', marginBottom: '2rem' }}>Είσοδος στο διαχειριστικό</p>
 
         <form onSubmit={handleLogin}>
+          {isSupabaseConfigured ? (
+            <div className="form-group" style={{ textAlign: 'left' }}>
+              <label className="form-label"><Mail size={16} /> Email Admin</label>
+              <input type="email" className="form-control" required value={form.email}
+                onChange={e => setForm({ ...form, email: e.target.value })} />
+            </div>
+          ) : null}
           <div className="form-group" style={{ textAlign: 'left' }}>
-            <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Lock size={16} /> Κωδικός Πρόσβασης
-            </label>
-            <input 
-              type="password" 
-              className="form-control" 
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Εισάγετε τον κωδικό"
-              required
-            />
+            <label className="form-label"><Lock size={16} /> Κωδικός Πρόσβασης</label>
+            <input type="password" className="form-control" required value={form.password}
+              onChange={e => setForm({ ...form, password: e.target.value })}
+              placeholder={isSupabaseConfigured ? 'Κωδικός admin' : 'admin123 (demo)'} />
           </div>
-          
-          {error && <p style={{ color: 'red', fontSize: '0.9rem', marginBottom: '1rem', textAlign: 'left' }}>{error}</p>}
-          
-          <button type="submit" className="btn btn-primary mt-2" style={{ width: '100%' }}>
-            Σύνδεση
+
+          {error && <p style={{ color: '#c05530', fontSize: '0.9rem', marginBottom: '1rem', textAlign: 'left' }}>{error}</p>}
+
+          <button type="submit" className="btn btn-primary mt-2" style={{ width: '100%' }} disabled={loading}>
+            {loading ? 'Σύνδεση...' : 'Σύνδεση'}
           </button>
         </form>
-        
-        <p style={{ marginTop: '2rem', fontSize: '0.85rem', color: 'var(--color-text-light)' }}>
-          Για το demo, ο κωδικός είναι <strong>admin123</strong>
-        </p>
+
+        {!isSupabaseConfigured && (
+          <p style={{ marginTop: '2rem', fontSize: '0.85rem', color: 'var(--color-text-light)' }}>
+            Demo mode — κωδικός: <strong>admin123</strong>
+          </p>
+        )}
       </div>
     </div>
   );

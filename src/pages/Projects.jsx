@@ -36,7 +36,7 @@ const Projects = () => {
       {/* Filter Tabs */}
       <section className="section" style={{ paddingTop: 0 }}>
         <div className="container">
-          <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '2.5rem' }}>
+          <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '2.5rem', flexWrap: 'wrap' }}>
             {[
               { key: 'All', label: t('projects.filter_all', 'Όλα') },
               { key: 'Ενεργό', label: t('projects.filter_active', 'Ενεργά') },

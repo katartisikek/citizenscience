@@ -35,10 +35,10 @@ const News = () => {
 
       <section className="section" style={{ paddingTop: 0 }}>
         <div className="container">
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '3rem', alignItems: 'flex-start' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'clamp(1.5rem, 4vw, 3rem)', alignItems: 'flex-start' }}>
 
             {/* ── Main: News Articles ─── */}
-            <div style={{ flex: '1 1 560px' }}>
+            <div style={{ flex: '1 1 320px', minWidth: 0 }}>
               <h2 style={{ marginBottom: '1.75rem' }}>{t('news.latest', 'Τελευταία Νέα')}</h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
                 {news.map(item => {
@@ -84,7 +84,7 @@ const News = () => {
             </div>
 
             {/* ── Sidebar: Calendar ─── */}
-            <div style={{ flex: '0 0 300px', minWidth: 280 }}>
+            <div style={{ flex: '1 1 280px', minWidth: 0, maxWidth: '100%' }}>
               <div style={{
                 background: 'var(--color-surface)',
                 border: '1px solid var(--color-border)',
