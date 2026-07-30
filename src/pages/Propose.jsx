@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Send, CheckCircle, Upload } from 'lucide-react';
+import { Send, CheckCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useData } from '../context/DataContext';
 import { useAuth } from '../context/AuthContext';

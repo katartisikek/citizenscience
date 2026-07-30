@@ -8,7 +8,7 @@ const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { signIn, isSupabaseConfigured } = useAuth();
+  const { signIn, signOut, isSupabaseConfigured } = useAuth();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -18,6 +18,7 @@ const Login = () => {
       if (isSupabaseConfigured) {
         const { profile: loggedProfile } = await signIn(form);
         if (loggedProfile?.role !== 'admin') {
+          await signOut();
           setError('Αυτός ο λογαριασμός δεν έχει δικαιώματα διαχειριστή.');
           return;
         }

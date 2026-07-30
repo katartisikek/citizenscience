@@ -6,6 +6,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import { summarizeObservationData } from '../lib/dataTypes';
+import PrivateStorageImage from '../components/PrivateStorageImage';
 
 const roleLabels = {
   citizen: 'Πολίτης',
@@ -118,7 +119,12 @@ const Profile = () => {
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', marginBottom: '2.5rem' }}>
             {myProjects.map((project) => (
-              <div key={project.id} className="card" style={{ padding: '1.15rem', display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
+              <div
+                key={project.id}
+                data-testid={`my-project-${project.id}`}
+                className="card"
+                style={{ padding: '1.15rem', display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}
+              >
                 {project.image && (
                   <img src={project.image} alt="" style={{ width: 72, height: 72, objectFit: 'cover', borderRadius: 'var(--radius-md)' }} />
                 )}
@@ -158,12 +164,16 @@ const Profile = () => {
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {myObservations.map((obs) => {
-              const project = projects.find((p) => p.id === obs.project_id);
+              const project = projects.find((p) => String(p.id) === String(obs.project_id));
               const summary = summarizeObservationData(obs.data);
               return (
                 <div key={obs.id} className="card" style={{ padding: '1.25rem', display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
                   {obs.photo_url && (
-                    <img src={obs.photo_url} alt="" style={{ width: 80, height: 80, objectFit: 'cover', borderRadius: 'var(--radius-md)' }} />
+                    <PrivateStorageImage
+                      path={obs.photo_url}
+                      alt=""
+                      style={{ width: 80, height: 80, objectFit: 'cover', borderRadius: 'var(--radius-md)' }}
+                    />
                   )}
                   <div style={{ flex: 1 }}>
                     <h4 style={{ margin: 0 }}>{project?.title || `Project #${obs.project_id}`}</h4>
@@ -226,7 +236,7 @@ const Profile = () => {
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 {availableProjects.map((project) => (
-                  <div key={project.id} style={{
+                  <div key={project.id} data-testid={`available-project-${project.id}`} style={{
                     display: 'flex', gap: '0.85rem', alignItems: 'center', flexWrap: 'wrap',
                     padding: '0.85rem', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)',
                   }}>

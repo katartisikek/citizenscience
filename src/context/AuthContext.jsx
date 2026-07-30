@@ -69,16 +69,13 @@ export const AuthProvider = ({ children }) => {
       },
     });
     if (error) throw error;
-    if (data.user) {
-      await supabase.from('profiles').update({
-        full_name: composedName,
-        phone,
-        area,
-        role: ['citizen', 'researcher', 'entity'].includes(role) ? role : 'citizen',
-      }).eq('id', data.user.id);
-      const profileData = await fetchProfile(data.user.id);
-      setUser(data.user);
+    if (data.session?.user) {
+      const profileData = await fetchProfile(data.session.user.id);
+      setUser(data.session.user);
       setProfile(profileData);
+    } else {
+      setUser(null);
+      setProfile(null);
     }
     return data;
   };
@@ -99,7 +96,8 @@ export const AuthProvider = ({ children }) => {
     sessionStorage.removeItem('admin_auth');
   };
 
-  const isAdmin = profile?.role === 'admin' || sessionStorage.getItem('admin_auth') === 'true';
+  const isAdmin = profile?.role === 'admin'
+    || (!isSupabaseConfigured && sessionStorage.getItem('admin_auth') === 'true');
 
   return (
     <AuthContext.Provider value={{

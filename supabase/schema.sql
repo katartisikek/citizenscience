@@ -77,6 +77,34 @@ CREATE TABLE registrations (
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- Entity partnership inquiries
+CREATE TABLE entity_inquiries (
+  id BIGSERIAL PRIMARY KEY,
+  organization TEXT NOT NULL CHECK (char_length(organization) BETWEEN 2 AND 200),
+  contact_name TEXT NOT NULL CHECK (char_length(contact_name) BETWEEN 2 AND 150),
+  email TEXT NOT NULL CHECK (char_length(email) <= 320),
+  phone TEXT CHECK (phone IS NULL OR char_length(phone) <= 50),
+  message TEXT NOT NULL CHECK (char_length(message) BETWEEN 10 AND 5000),
+  status TEXT NOT NULL DEFAULT 'pending'
+    CHECK (status IN ('pending', 'contacted', 'closed')),
+  user_id UUID REFERENCES profiles(id) ON DELETE SET NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Newsletter subscriptions
+CREATE TABLE newsletter_subscribers (
+  id BIGSERIAL PRIMARY KEY,
+  email TEXT NOT NULL CHECK (char_length(email) <= 320),
+  locale TEXT NOT NULL DEFAULT 'el' CHECK (locale IN ('el', 'en')),
+  status TEXT NOT NULL DEFAULT 'active'
+    CHECK (status IN ('active', 'unsubscribed')),
+  user_id UUID REFERENCES profiles(id) ON DELETE SET NULL,
+  subscribed_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE UNIQUE INDEX newsletter_subscribers_email_lower_idx
+  ON newsletter_subscribers (lower(email));
+
 -- Project proposals (Propose form)
 CREATE TABLE proposals (
   id BIGSERIAL PRIMARY KEY,
@@ -180,16 +208,17 @@ ALTER TABLE site_settings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE news ENABLE ROW LEVEL SECURITY;
 ALTER TABLE registrations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE entity_inquiries ENABLE ROW LEVEL SECURITY;
+ALTER TABLE newsletter_subscribers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE proposals ENABLE ROW LEVEL SECURITY;
 ALTER TABLE observations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE project_members ENABLE ROW LEVEL SECURITY;
 
--- Public read policies
-CREATE POLICY "Public read profiles" ON profiles FOR SELECT USING (true);
+-- Public read policies (profiles are private)
+CREATE POLICY "Users read own profile" ON profiles FOR SELECT USING (auth.uid() = id);
 CREATE POLICY "Public read settings" ON site_settings FOR SELECT USING (true);
 CREATE POLICY "Public read projects" ON projects FOR SELECT USING (true);
 CREATE POLICY "Public read news" ON news FOR SELECT USING (true);
-CREATE POLICY "Public read approved observations" ON observations FOR SELECT USING (status = 'approved');
 
 -- Users update own profile
 CREATE POLICY "Users update own profile" ON profiles FOR UPDATE USING (auth.uid() = id);
@@ -207,22 +236,111 @@ AS $$
   );
 $$;
 
+CREATE POLICY "Admin read profiles" ON profiles FOR SELECT
+  USING (public.is_admin());
+
 CREATE POLICY "Admin update profiles" ON profiles FOR UPDATE
   USING (public.is_admin())
   WITH CHECK (public.is_admin());
+
+REVOKE UPDATE ON TABLE public.profiles FROM authenticated;
+GRANT SELECT ON TABLE public.profiles TO authenticated;
+GRANT UPDATE (full_name, phone, area, avatar_url)
+  ON TABLE public.profiles TO authenticated;
+
+CREATE OR REPLACE FUNCTION public.admin_update_user_role(
+  target_user_id uuid,
+  new_role text
+)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  IF NOT public.is_admin() THEN
+    RAISE EXCEPTION 'Admin access required';
+  END IF;
+  IF new_role NOT IN ('citizen', 'researcher', 'entity', 'admin') THEN
+    RAISE EXCEPTION 'Invalid role';
+  END IF;
+  IF target_user_id = auth.uid() AND new_role <> 'admin' THEN
+    RAISE EXCEPTION 'Admins cannot demote themselves';
+  END IF;
+  IF new_role <> 'admin'
+     AND (SELECT role FROM public.profiles WHERE id = target_user_id) = 'admin'
+     AND (SELECT count(*) FROM public.profiles WHERE role = 'admin') <= 1 THEN
+    RAISE EXCEPTION 'At least one admin is required';
+  END IF;
+  UPDATE public.profiles SET role = new_role WHERE id = target_user_id;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'User not found';
+  END IF;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.admin_update_user_role(uuid, text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.admin_update_user_role(uuid, text) TO authenticated;
 
 CREATE POLICY "Users join projects" ON project_members FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 CREATE POLICY "Users read own membership" ON project_members FOR SELECT
   USING (auth.uid() = user_id OR public.is_admin());
+CREATE POLICY "Users update own membership" ON project_members FOR UPDATE
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Admin manage members" ON project_members FOR ALL
+  USING (public.is_admin())
+  WITH CHECK (public.is_admin());
+
+GRANT SELECT, INSERT, UPDATE ON TABLE public.project_members TO authenticated;
 
 -- Anyone can register / propose
 CREATE POLICY "Anyone can register" ON registrations FOR INSERT WITH CHECK (true);
 CREATE POLICY "Anyone can propose" ON proposals FOR INSERT WITH CHECK (true);
+CREATE POLICY "Anyone submits entity inquiry" ON entity_inquiries FOR INSERT
+  WITH CHECK (
+    status = 'pending'
+    AND (user_id IS NULL OR user_id = auth.uid())
+  );
+CREATE POLICY "Admin manages entity inquiries" ON entity_inquiries FOR ALL
+  USING (public.is_admin())
+  WITH CHECK (public.is_admin());
+CREATE POLICY "Anyone subscribes newsletter" ON newsletter_subscribers FOR INSERT
+  WITH CHECK (
+    status = 'active'
+    AND (user_id IS NULL OR user_id = auth.uid())
+  );
+CREATE POLICY "Admin manages newsletter subscribers" ON newsletter_subscribers FOR ALL
+  USING (public.is_admin())
+  WITH CHECK (public.is_admin());
 
--- Authenticated users submit observations
-CREATE POLICY "Auth users insert observations" ON observations FOR INSERT WITH CHECK (auth.uid() IS NOT NULL);
-CREATE POLICY "Users read own observations" ON observations FOR SELECT USING (auth.uid() = user_id OR status = 'approved');
+GRANT INSERT ON TABLE public.entity_inquiries TO anon, authenticated;
+GRANT INSERT ON TABLE public.newsletter_subscribers TO anon, authenticated;
+GRANT SELECT, UPDATE, DELETE ON TABLE public.entity_inquiries TO authenticated;
+GRANT SELECT, UPDATE, DELETE ON TABLE public.newsletter_subscribers TO authenticated;
+GRANT USAGE, SELECT ON SEQUENCE public.entity_inquiries_id_seq TO anon, authenticated;
+GRANT USAGE, SELECT ON SEQUENCE public.newsletter_subscribers_id_seq TO anon, authenticated;
+
+-- Observation source rows are private. Public consumers use the sanitized RPC.
+CREATE POLICY "Users read own observations" ON observations FOR SELECT
+  USING (auth.uid() = user_id);
+CREATE POLICY "Members submit own observations" ON observations FOR INSERT
+  WITH CHECK (
+    auth.uid() = user_id
+    AND status = 'pending'
+    AND EXISTS (
+      SELECT 1
+      FROM public.project_members pm
+      JOIN public.projects p ON p.id = pm.project_id
+      WHERE pm.project_id = observations.project_id
+        AND pm.user_id = auth.uid()
+        AND p.status = 'Ενεργό'
+    )
+  );
+CREATE POLICY "Users update own pending observations" ON observations FOR UPDATE
+  USING (auth.uid() = user_id AND status = 'pending')
+  WITH CHECK (auth.uid() = user_id AND status = 'pending');
 
 -- Admin policies (role = admin)
 CREATE POLICY "Admin all settings" ON site_settings FOR ALL USING (
@@ -240,9 +358,32 @@ CREATE POLICY "Admin read registrations" ON registrations FOR SELECT USING (
 CREATE POLICY "Admin all proposals" ON proposals FOR ALL USING (
   EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
 );
-CREATE POLICY "Admin all observations" ON observations FOR ALL USING (
-  EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
-);
+CREATE POLICY "Admin all observations" ON observations FOR ALL
+  USING (public.is_admin())
+  WITH CHECK (public.is_admin());
+
+CREATE OR REPLACE FUNCTION public.get_public_observations()
+RETURNS TABLE (
+  id bigint,
+  project_id bigint,
+  lat double precision,
+  lng double precision,
+  status text,
+  created_at timestamptz,
+  data jsonb
+)
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+STABLE
+AS $$
+  SELECT o.id, o.project_id, o.lat, o.lng, o.status, o.created_at, '{}'::jsonb
+  FROM public.observations o
+  WHERE o.status = 'approved';
+$$;
+
+REVOKE ALL ON FUNCTION public.get_public_observations() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.get_public_observations() TO anon, authenticated;
 
 -- Seed data
 INSERT INTO site_settings (id, hero_title, hero_title_en, hero_subtitle, hero_subtitle_en, about_text, about_text_en)
@@ -296,13 +437,35 @@ VALUES
 );
 
 -- Storage bucket + policies for observation photos
-INSERT INTO storage.buckets (id, name, public)
-VALUES ('observations', 'observations', true)
+INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+VALUES (
+  'observations',
+  'observations',
+  false,
+  26214400,
+  ARRAY[
+    'image/jpeg', 'image/png', 'image/webp', 'image/heic',
+    'video/mp4', 'video/webm', 'video/quicktime',
+    'audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/webm',
+    'application/pdf', 'application/json', 'application/geo+json',
+    'application/gpx+xml', 'text/csv', 'text/plain'
+  ]
+)
 ON CONFLICT (id) DO NOTHING;
 
-CREATE POLICY "Public read observation photos"
+CREATE POLICY "Users read own observation files"
   ON storage.objects FOR SELECT
-  USING (bucket_id = 'observations');
+  USING (
+    bucket_id = 'observations'
+    AND auth.uid()::text = (storage.foldername(name))[1]
+  );
+
+CREATE POLICY "Admins read observation files"
+  ON storage.objects FOR SELECT
+  USING (
+    bucket_id = 'observations'
+    AND public.is_admin()
+  );
 
 CREATE POLICY "Auth users upload observation photos"
   ON storage.objects FOR INSERT

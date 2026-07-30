@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, FolderKanban, FileText, Settings, LogOut, Menu, X, ClipboardList, Send, Users } from 'lucide-react';
+import { LayoutDashboard, FolderKanban, FileText, Settings, LogOut, Menu, X, ClipboardList, Send, Users, Inbox } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useData } from '../context/DataContext';
 
 const AdminLayout = () => {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const navigate = useNavigate();
   const { isAdmin, signOut, loading } = useAuth();
+  const { loadError } = useData();
 
   useEffect(() => {
     if (!loading && !isAdmin) {
@@ -26,10 +28,11 @@ const AdminLayout = () => {
     { name: 'Νέα & Εκδηλώσεις', path: '/admin/news', end: false, icon: <FileText size={20} /> },
     { name: 'Προτάσεις', path: '/admin/proposals', end: false, icon: <Send size={20} /> },
     { name: 'Παρατηρήσεις', path: '/admin/observations', end: false, icon: <ClipboardList size={20} /> },
+    { name: 'Εισερχόμενα', path: '/admin/inbox', end: false, icon: <Inbox size={20} /> },
     { name: 'Ρυθμίσεις', path: '/admin/settings', end: false, icon: <Settings size={20} /> },
   ];
 
-  if (loading) return null;
+  if (loading || !isAdmin) return null;
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f3f4f6' }}>
@@ -82,6 +85,11 @@ const AdminLayout = () => {
           <h2 style={{ fontSize: '1.1rem', margin: 0 }}>Διαχειριστικό Σύστημα</h2>
         </header>
         <div style={{ padding: '2rem 1.5rem', flex: 1, overflowX: 'hidden' }}>
+          {loadError && (
+            <div role="alert" style={{ padding: '1rem', marginBottom: '1.5rem', background: '#fff3cd', color: '#664d03', borderRadius: 'var(--radius-sm)' }}>
+              Αποτυχία φόρτωσης δεδομένων από το Supabase: {loadError}
+            </div>
+          )}
           <Outlet />
         </div>
       </main>

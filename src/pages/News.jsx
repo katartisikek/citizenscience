@@ -1,4 +1,5 @@
 import { Calendar as CalendarIcon, Clock, MapPin, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import { useTranslation } from 'react-i18next';
 
@@ -73,9 +74,9 @@ const News = () => {
                         <p style={{ color: 'var(--color-text)', marginBottom: '1.25rem', lineHeight: 1.7, fontSize: '0.95rem' }}>
                           {tData(item, 'content')}
                         </p>
-                        <button className="btn btn-ghost" style={{ padding: '0.5rem 0', color: 'var(--primary-700)', fontWeight: 600 }}>
+                        <Link to={`/news/${item.id}`} className="btn btn-ghost" style={{ padding: '0.5rem 0', color: 'var(--primary-700)', fontWeight: 600 }}>
                           {t('news.read_more', 'Διαβάστε περισσότερα')} <ChevronRight size={16} />
-                        </button>
+                        </Link>
                       </div>
                     </article>
                   );

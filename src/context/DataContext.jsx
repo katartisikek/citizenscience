@@ -4,6 +4,27 @@ import { DEFAULT_DATA_TYPES } from '../lib/dataTypes';
 import { useAuth } from './AuthContext';
 
 const DataContext = createContext();
+const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
+const MIME_BY_EXTENSION = {
+  jpg: 'image/jpeg',
+  jpeg: 'image/jpeg',
+  png: 'image/png',
+  webp: 'image/webp',
+  heic: 'image/heic',
+  mp4: 'video/mp4',
+  webm: 'video/webm',
+  mov: 'video/quicktime',
+  mp3: 'audio/mpeg',
+  wav: 'audio/wav',
+  ogg: 'audio/ogg',
+  pdf: 'application/pdf',
+  json: 'application/json',
+  geojson: 'application/geo+json',
+  gpx: 'application/gpx+xml',
+  csv: 'text/csv',
+  txt: 'text/plain',
+};
+const ALLOWED_UPLOAD_TYPES = new Set([...Object.values(MIME_BY_EXTENSION), 'audio/webm']);
 
 export const useData = () => useContext(DataContext);
 
@@ -122,23 +143,28 @@ const mapSettingsToDb = (s) => ({
 });
 
 export const DataProvider = ({ children }) => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [projects, setProjects] = useState([]);
   const [news, setNews] = useState([]);
   const [settings, setSettings] = useState(initialSettings);
   const [registrations, setRegistrations] = useState([]);
+  const [entityInquiries, setEntityInquiries] = useState([]);
+  const [newsletterSubscribers, setNewsletterSubscribers] = useState([]);
   const [proposals, setProposals] = useState([]);
   const [observations, setObservations] = useState([]);
   const [profiles, setProfiles] = useState([]);
   const [memberships, setMemberships] = useState([]);
   const [loading, setLoading] = useState(true);
   const [usingLocal, setUsingLocal] = useState(!isSupabaseConfigured);
+  const [loadError, setLoadError] = useState('');
 
   const loadLocal = useCallback(() => {
     setProjects(JSON.parse(localStorage.getItem('cs_projects') || JSON.stringify(initialProjects)));
     setNews(JSON.parse(localStorage.getItem('cs_news') || JSON.stringify(initialNews)));
     setSettings(JSON.parse(localStorage.getItem('cs_settings') || JSON.stringify(initialSettings)));
     setRegistrations(JSON.parse(localStorage.getItem('cs_registrations') || '[]'));
+    setEntityInquiries(JSON.parse(localStorage.getItem('cs_entity_inquiries') || '[]'));
+    setNewsletterSubscribers(JSON.parse(localStorage.getItem('cs_newsletter_subscribers') || '[]'));
     setProposals(JSON.parse(localStorage.getItem('cs_proposals') || '[]'));
     setObservations(JSON.parse(localStorage.getItem('cs_observations') || '[]'));
     setProfiles(JSON.parse(localStorage.getItem('cs_profiles') || '[]'));
@@ -166,30 +192,77 @@ export const DataProvider = ({ children }) => {
 
   const loadFromSupabase = useCallback(async () => {
     if (!supabase) { loadLocal(); return; }
+    setLoadError('');
     try {
-      const [projRes, newsRes, settingsRes, regRes, propRes, obsRes, profilesRes] = await Promise.all([
+      const [projRes, newsRes, settingsRes, publicObsRes] = await Promise.all([
         supabase.from('projects').select('*').order('id'),
         supabase.from('news').select('*').order('created_at', { ascending: false }),
         supabase.from('site_settings').select('*').eq('id', 1).single(),
-        supabase.from('registrations').select('*').order('created_at', { ascending: false }),
-        supabase.from('proposals').select('*').order('created_at', { ascending: false }),
-        supabase.from('observations').select('*').order('created_at', { ascending: false }),
-        supabase.from('profiles').select('*').order('created_at', { ascending: false }),
+        supabase.rpc('get_public_observations'),
       ]);
 
       if (projRes.error) throw projRes.error;
+      if (newsRes.error) throw newsRes.error;
+      if (settingsRes.error) throw settingsRes.error;
+      if (publicObsRes.error) throw publicObsRes.error;
+
+      let nextRegistrations = [];
+      let nextEntityInquiries = [];
+      let nextNewsletterSubscribers = [];
+      let nextProposals = [];
+      let nextProfiles = [];
+      let privateObservations = [];
+
+      if (user?.id) {
+        const ownObsRes = await supabase
+          .from('observations')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false });
+        if (ownObsRes.error) throw ownObsRes.error;
+        privateObservations = ownObsRes.data || [];
+      }
+
+      if (profile?.role === 'admin') {
+        const [regRes, inquiryRes, newsletterRes, propRes, obsRes, profilesRes] = await Promise.all([
+          supabase.from('registrations').select('*').order('created_at', { ascending: false }),
+          supabase.from('entity_inquiries').select('*').order('created_at', { ascending: false }),
+          supabase.from('newsletter_subscribers').select('*').order('subscribed_at', { ascending: false }),
+          supabase.from('proposals').select('*').order('created_at', { ascending: false }),
+          supabase.from('observations').select('*').order('created_at', { ascending: false }),
+          supabase.from('profiles').select('*').order('created_at', { ascending: false }),
+        ]);
+        const adminError = regRes.error || inquiryRes.error || newsletterRes.error
+          || propRes.error || obsRes.error || profilesRes.error;
+        if (adminError) throw adminError;
+        nextRegistrations = regRes.data || [];
+        nextEntityInquiries = inquiryRes.data || [];
+        nextNewsletterSubscribers = newsletterRes.data || [];
+        nextProposals = propRes.data || [];
+        nextProfiles = profilesRes.data || [];
+        privateObservations = obsRes.data || [];
+      }
+
+      const observationMap = new Map();
+      [...(publicObsRes.data || []), ...privateObservations].forEach((row) => {
+        observationMap.set(String(row.id), row);
+      });
+
       setProjects((projRes.data || []).map(mapProjectFromDb));
       setNews(newsRes.data || []);
       if (settingsRes.data) setSettings(mapSettingsFromDb(settingsRes.data));
-      setRegistrations(regRes.data || []);
-      setProposals(propRes.data || []);
-      setObservations(obsRes.data || []);
-      setProfiles(profilesRes.data || []);
+      setRegistrations(nextRegistrations);
+      setEntityInquiries(nextEntityInquiries);
+      setNewsletterSubscribers(nextNewsletterSubscribers);
+      setProposals(nextProposals);
+      setObservations([...observationMap.values()]);
+      setProfiles(nextProfiles);
       setUsingLocal(false);
-    } catch {
-      loadLocal();
+    } catch (error) {
+      setUsingLocal(false);
+      setLoadError(error.message || 'Αποτυχία σύνδεσης με το Supabase');
     }
-  }, [loadLocal]);
+  }, [loadLocal, profile?.role, user?.id]);
 
   useEffect(() => {
     loadFromSupabase().finally(() => setLoading(false));
@@ -218,6 +291,16 @@ export const DataProvider = ({ children }) => {
     if (!usingLocal) return;
     localStorage.setItem('cs_registrations', JSON.stringify(registrations));
   }, [registrations, usingLocal]);
+
+  useEffect(() => {
+    if (!usingLocal) return;
+    localStorage.setItem('cs_entity_inquiries', JSON.stringify(entityInquiries));
+  }, [entityInquiries, usingLocal]);
+
+  useEffect(() => {
+    if (!usingLocal) return;
+    localStorage.setItem('cs_newsletter_subscribers', JSON.stringify(newsletterSubscribers));
+  }, [newsletterSubscribers, usingLocal]);
 
   useEffect(() => {
     if (!usingLocal) return;
@@ -322,10 +405,57 @@ export const DataProvider = ({ children }) => {
       setRegistrations(prev => [item, ...prev]);
       return item;
     }
-    const { data: row, error } = await supabase.from('registrations').insert(data).select().single();
+    const { error } = await supabase.from('registrations').insert(data);
     if (error) throw error;
-    setRegistrations(prev => [row, ...prev]);
-    return row;
+    return data;
+  };
+
+  const addEntityInquiry = async (data) => {
+    const payload = {
+      organization: data.organization.trim(),
+      contact_name: data.contact_name.trim(),
+      email: data.email.trim().toLowerCase(),
+      phone: data.phone?.trim() || null,
+      message: data.message.trim(),
+      user_id: data.user_id || null,
+    };
+    if (usingLocal) {
+      const item = { ...payload, id: Date.now(), status: 'pending', created_at: new Date().toISOString() };
+      setEntityInquiries(prev => [item, ...prev]);
+      return item;
+    }
+    const { error } = await supabase
+      .from('entity_inquiries')
+      .insert(payload);
+    if (error) throw error;
+    return payload;
+  };
+
+  const updateEntityInquiryStatus = async (id, status) => {
+    if (usingLocal) {
+      setEntityInquiries(prev => prev.map(item => item.id === id ? { ...item, status } : item));
+      return;
+    }
+    const { error } = await supabase.from('entity_inquiries').update({ status }).eq('id', id);
+    if (error) throw error;
+    setEntityInquiries(prev => prev.map(item => item.id === id ? { ...item, status } : item));
+  };
+
+  const subscribeNewsletter = async ({ email, locale = 'el', user_id = null }) => {
+    const payload = { email: email.trim().toLowerCase(), locale, user_id };
+    if (usingLocal) {
+      const exists = newsletterSubscribers.some(item => item.email.toLowerCase() === payload.email);
+      if (exists) return { alreadySubscribed: true };
+      const item = { ...payload, id: Date.now(), status: 'active', subscribed_at: new Date().toISOString() };
+      setNewsletterSubscribers(prev => [item, ...prev]);
+      return item;
+    }
+    const { error } = await supabase
+      .from('newsletter_subscribers')
+      .insert(payload);
+    if (error?.code === '23505') return { alreadySubscribed: true };
+    if (error) throw error;
+    return payload;
   };
 
   const addProposal = async (data) => {
@@ -334,10 +464,9 @@ export const DataProvider = ({ children }) => {
       setProposals(prev => [item, ...prev]);
       return item;
     }
-    const { data: row, error } = await supabase.from('proposals').insert(data).select().single();
+    const { error } = await supabase.from('proposals').insert(data);
     if (error) throw error;
-    setProposals(prev => [row, ...prev]);
-    return row;
+    return data;
   };
 
   const updateProposalStatus = async (id, status) => {
@@ -376,18 +505,43 @@ export const DataProvider = ({ children }) => {
     if (usingLocal || !supabase) {
       return URL.createObjectURL(file);
     }
+    if (file.size > MAX_UPLOAD_BYTES) {
+      throw new Error('Το αρχείο υπερβαίνει το μέγιστο μέγεθος των 25 MB.');
+    }
     const ext = (file.name.split('.').pop() || 'bin').toLowerCase().replace(/[^a-z0-9]/g, '') || 'bin';
+    const contentType = file.type || MIME_BY_EXTENSION[ext];
+    if (!contentType || !ALLOWED_UPLOAD_TYPES.has(contentType)) {
+      throw new Error('Ο τύπος αρχείου δεν επιτρέπεται.');
+    }
     const path = `${userId}/${folder}/${Date.now()}.${ext}`;
     const { error } = await supabase.storage.from('observations').upload(path, file, {
-      contentType: file.type || 'application/octet-stream',
+      contentType,
       upsert: false,
     });
     if (error) throw error;
-    const { data } = supabase.storage.from('observations').getPublicUrl(path);
-    return data.publicUrl;
+    return path;
   };
 
   const uploadPhoto = async (file, userId) => uploadFile(file, userId, 'photos');
+
+  const getFileUrl = async (storedValue, expiresIn = 3600) => {
+    if (!storedValue || usingLocal || !supabase) return storedValue || '';
+    if (storedValue.startsWith('blob:') || storedValue.startsWith('data:')) return storedValue;
+
+    let path = storedValue;
+    const publicMarker = '/storage/v1/object/public/observations/';
+    if (storedValue.includes(publicMarker)) {
+      path = decodeURIComponent(storedValue.split(publicMarker)[1]);
+    } else if (/^https?:\/\//i.test(storedValue)) {
+      return storedValue;
+    }
+
+    const { data, error } = await supabase.storage
+      .from('observations')
+      .createSignedUrl(path, expiresIn);
+    if (error) throw error;
+    return data.signedUrl;
+  };
 
   const joinProject = async (projectId, userId) => {
     if (!userId) throw new Error('Απαιτείται σύνδεση');
@@ -403,15 +557,22 @@ export const DataProvider = ({ children }) => {
       });
       return row;
     }
+
     const { data, error } = await supabase
       .from('project_members')
-      .upsert(
-        { project_id: projectId, user_id: userId },
-        { onConflict: 'project_id,user_id' }
-      )
+      .insert({ project_id: projectId, user_id: userId })
       .select()
       .single();
-    if (error) throw error;
+
+    if (error) {
+      // already a member
+      if (error.code === '23505') {
+        await loadMemberships(userId);
+        return row;
+      }
+      throw error;
+    }
+
     setMemberships((prev) => {
       const without = prev.filter((m) => !(String(m.project_id) === String(projectId) && m.user_id === userId));
       return [data || row, ...without];
@@ -431,7 +592,10 @@ export const DataProvider = ({ children }) => {
       setProfiles(prev => prev.map(p => p.id === userId ? { ...p, role } : p));
       return;
     }
-    const { error } = await supabase.from('profiles').update({ role }).eq('id', userId);
+    const { error } = await supabase.rpc('admin_update_user_role', {
+      target_user_id: userId,
+      new_role: role,
+    });
     if (error) throw error;
     setProfiles(prev => prev.map(p => p.id === userId ? { ...p, role } : p));
   };
@@ -454,12 +618,14 @@ export const DataProvider = ({ children }) => {
       news, addNews, updateNews, deleteNews,
       settings, updateSettings,
       registrations, addRegistration,
+      entityInquiries, addEntityInquiry, updateEntityInquiryStatus,
+      newsletterSubscribers, subscribeNewsletter,
       proposals, addProposal, updateProposalStatus,
       observations, addObservation, updateObservationStatus,
       profiles, updateUserRole, updateProfileFields,
       memberships, myProjects, joinProject, isMemberOf, loadMemberships,
-      uploadPhoto, uploadFile,
-      loading, usingLocal, refresh,
+      uploadPhoto, uploadFile, getFileUrl,
+      loading, usingLocal, loadError, refresh,
     }}>
       {children}
     </DataContext.Provider>

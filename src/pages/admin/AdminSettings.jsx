@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useData } from '../../context/DataContext';
 import { Save, CheckCircle } from 'lucide-react';
 
@@ -6,12 +6,26 @@ const AdminSettings = () => {
   const { settings, updateSettings } = useData();
   const [formData, setFormData] = useState(settings);
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    setFormData(settings);
+  }, [settings]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    updateSettings(formData);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+    setSaving(true);
+    setError('');
+    try {
+      await updateSettings(formData);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (err) {
+      setError(err.message || 'Αποτυχία αποθήκευσης');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -24,6 +38,11 @@ const AdminSettings = () => {
         {saved && (
           <div style={{ padding: '1rem', backgroundColor: 'rgba(42, 111, 77, 0.1)', color: 'var(--color-primary)', borderRadius: 'var(--radius-sm)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <CheckCircle size={20} /> Οι αλλαγές αποθηκεύτηκαν επιτυχώς!
+          </div>
+        )}
+        {error && (
+          <div role="alert" style={{ padding: '1rem', color: '#991b1b', marginBottom: '1.5rem' }}>
+            {error}
           </div>
         )}
         
@@ -101,8 +120,8 @@ const AdminSettings = () => {
           </div>
 
           <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'flex-end' }}>
-            <button type="submit" className="btn btn-primary">
-              <Save size={18} /> Αποθήκευση Αλλαγών
+            <button type="submit" className="btn btn-primary" disabled={saving}>
+              <Save size={18} /> {saving ? 'Αποθήκευση...' : 'Αποθήκευση Αλλαγών'}
             </button>
           </div>
         </form>

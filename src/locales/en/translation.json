@@ -43,6 +43,10 @@
     "address": "Heraklion, Crete, Greece",
     "newsletter": "NEWSLETTER",
     "email_placeholder": "Your email...",
+    "newsletter_consent": "I consent to the processing of my email under the",
+    "newsletter_success": "Subscription completed.",
+    "newsletter_exists": "This email is already subscribed.",
+    "newsletter_error": "Subscription failed. Please try again.",
     "rights": "© 2024 Citizen Science Crete. All rights reserved.",
     "privacy": "Privacy Policy",
     "terms": "Terms of Use"
@@ -76,6 +80,8 @@
     "desc": "Stay informed about the latest developments, announcements, and upcoming events.",
     "latest": "Latest News",
     "read_more": "Read more",
+    "back": "Back to news",
+    "not_found": "News item not found",
     "upcoming": "Upcoming Events",
     "all_events": "All Events"
   },
@@ -102,7 +108,13 @@
     "f_phone": "Phone",
     "f_desc": "Brief description of interest *",
     "f_desc_ph": "Describe the interest or proposed collaboration...",
-    "f_submit": "Submit"
+    "f_submit": "Submit",
+    "form_success": "Your request has been submitted. We will contact you soon.",
+    "form_error": "Submission failed. Please try again.",
+    "form_sending": "Sending..."
+  },
+  "common": {
+    "loading": "Loading..."
   },
   "opendata": {
     "title": "Open Data",

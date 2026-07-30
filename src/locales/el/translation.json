@@ -45,9 +45,25 @@
     "address": "Ηράκλειο Κρήτης, Ελλάδα",
     "newsletter": "NEWSLETTER",
     "email_placeholder": "Το email σας...",
+    "newsletter_consent": "Συμφωνώ με την επεξεργασία του email μου σύμφωνα με την",
+    "newsletter_success": "Η εγγραφή ολοκληρώθηκε.",
+    "newsletter_exists": "Το email είναι ήδη εγγεγραμμένο.",
+    "newsletter_error": "Η εγγραφή απέτυχε. Δοκιμάστε ξανά.",
     "rights": "© 2026 Citizen Science Crete. Με την επιφύλαξη παντός δικαιώματος.",
     "privacy": "Πολιτική Απορρήτου",
     "terms": "Όροι Χρήσης"
+  },
+  "common": {
+    "loading": "Φόρτωση..."
+  },
+  "news": {
+    "back": "Πίσω στα νέα",
+    "not_found": "Η είδηση δεν βρέθηκε"
+  },
+  "entities": {
+    "form_success": "Το αίτημά σας καταχωρίστηκε. Θα επικοινωνήσουμε μαζί σας σύντομα.",
+    "form_error": "Η αποστολή απέτυχε. Δοκιμάστε ξανά.",
+    "form_sending": "Αποστολή..."
   },
   "participate": {
     "title": "Συμμετοχή Πολιτών",

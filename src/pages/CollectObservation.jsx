@@ -35,7 +35,7 @@ const nowLocalInput = () => {
 const CollectObservation = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { projects, addObservation, uploadFile, joinProject, updateProfileFields } = useData();
+  const { projects, addObservation, uploadFile, updateProfileFields, isMemberOf } = useData();
   const { user, profile, refreshProfile } = useAuth();
 
   const project = projects.find((p) => String(p.id) === String(id));
@@ -107,7 +107,7 @@ const CollectObservation = () => {
       setProfileData({
         full_name: profile.full_name || '',
         area: profile.area || '',
-        phone: '',
+        phone: profile.phone || '',
         interests: '',
       });
     }
@@ -137,6 +137,18 @@ const CollectObservation = () => {
     e.preventDefault();
     if (!user) {
       navigate('/login');
+      return;
+    }
+    if (project.status !== 'Ενεργό') {
+      setError('Το project δεν δέχεται νέες παρατηρήσεις.');
+      return;
+    }
+    if (!isMemberOf(project.id, user.id)) {
+      setError('Πρέπει πρώτα να εγγραφείτε στο project από το προφίλ σας.');
+      return;
+    }
+    if (enabled('geo') && !location) {
+      setError('Απαιτείται έγκυρη τοποθεσία GPS για την υποβολή.');
       return;
     }
     if (enabled('gdpr') && !consent) {
@@ -175,12 +187,9 @@ const CollectObservation = () => {
         await updateProfileFields(user.id, {
           full_name: profileData.full_name || profile?.full_name,
           area: profileData.area || profile?.area,
+          phone: profileData.phone || profile?.phone,
         });
         refreshProfile?.();
-      }
-
-      if (enabled('participation')) {
-        await joinProject(project.id, user.id);
       }
 
       const data = {};
@@ -229,8 +238,8 @@ const CollectObservation = () => {
       await addObservation({
         project_id: project.id,
         user_id: user.id,
-        lat: enabled('geo') ? (location?.lat ?? null) : (location?.lat ?? null),
-        lng: enabled('geo') ? (location?.lng ?? null) : (location?.lng ?? null),
+        lat: enabled('geo') ? location.lat : null,
+        lng: enabled('geo') ? location.lng : null,
         photo_url: media.photos[0] || null,
         data,
       });
@@ -280,6 +289,13 @@ const CollectObservation = () => {
         {!user && (
           <div className="card collect-auth-banner">
             <p style={{ margin: 0 }}>Πρέπει να <Link to="/login">συνδεθείτε</Link> για να υποβάλετε παρατήρηση.</p>
+          </div>
+        )}
+        {user && !isMemberOf(project.id, user.id) && (
+          <div className="card collect-auth-banner">
+            <p style={{ margin: 0 }}>
+              Πρέπει πρώτα να εγγραφείτε στο project από το <Link to="/profile">προφίλ σας</Link>.
+            </p>
           </div>
         )}
 
@@ -349,7 +365,11 @@ const CollectObservation = () => {
           {error && <p className="collect-error">{error}</p>}
 
           <div className="collect-submit-bar">
-            <button type="submit" className="btn btn-primary collect-submit" disabled={submitting || !user}>
+            <button
+              type="submit"
+              className="btn btn-primary collect-submit"
+              disabled={submitting || !user || !isMemberOf(project.id, user?.id)}
+            >
               <Upload size={16} /> {submitting ? 'Υποβολή...' : 'Υποβολή Παρατήρησης'}
             </button>
           </div>

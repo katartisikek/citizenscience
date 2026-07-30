@@ -20,8 +20,18 @@ npm run dev
    ```
 4. **SQL Editor**: επικολλήστε και τρέξτε όλο το `supabase/schema.sql`
    (δημιουργεί πίνακες, RLS, seed, bucket `observations` + storage policies)
-5. Αν το schema έχει ήδη τρέξει παλιότερα, τρέξτε και το `supabase/migrations/002_project_data_types.sql`
-   (στήλη `data_types` ανά project + admin role updates)
+5. Αν η βάση έχει ήδη δημιουργηθεί, τρέξτε με τη σειρά τα migrations που δεν
+   έχουν εφαρμοστεί:
+   - `002_project_data_types.sql`
+   - `003_profile_phone.sql`
+   - `004_fix_project_members_rls.sql`
+   - `005_security_hardening.sql`
+   - `006_public_forms.sql`
+
+   Το `005` είναι απαραίτητο πριν από production χρήση: κλειδώνει τους admin
+   ρόλους, τα προσωπικά δεδομένα, τις παρατηρήσεις και τα αρχεία.
+   Το `006` ενεργοποιεί τα αιτήματα συνεργασίας φορέων, το newsletter και το
+   αντίστοιχο admin inbox.
 6. **Authentication → Users → Add user**: δημιουργήστε admin λογαριασμό (email + password)
 7. **SQL Editor** — προώθηση σε admin (αλλάξτε το email):
    ```sql
@@ -29,7 +39,20 @@ npm run dev
    ```
 8. Κάντε restart το Vite (`npm run dev`) ώστε να φορτωθεί το `.env`
 
-**Έλεγχος E2E:** εγγραφή πολίτη → Projects → Collect (GPS + φωτο) → Admin Observations → Approve → Open Data χάρτης
+**Έλεγχος E2E:** εγγραφή πολίτη → εγγραφή σε Project από το Profile → Collect
+(GPS + φωτο) → Admin Observations → Approve → Open Data χάρτης
+
+## Playwright E2E
+
+```bash
+cp .env.test.example .env.test.local
+npm run test:e2e
+```
+
+Χρησιμοποιήστε αποκλειστικά επιβεβαιωμένους test λογαριασμούς. Ο citizen
+λογαριασμός πρέπει να έχει `role = 'citizen'` και ο admin `role = 'admin'`.
+Χωρίς credentials εκτελούνται τα public/security smoke tests και το πλήρες
+citizen/admin flow σημειώνεται ως skipped.
 
 **Σημαντικό:** Με ενεργό Supabase, το admin panel χρειάζεται πραγματικό login με `role=admin` (το demo `admin123` ισχύει μόνο χωρίς `.env`).
 

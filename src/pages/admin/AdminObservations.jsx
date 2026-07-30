@@ -1,6 +1,7 @@
 import { useData } from '../../context/DataContext';
 import { CheckCircle, XCircle } from 'lucide-react';
 import { summarizeObservationData } from '../../lib/dataTypes';
+import PrivateStorageImage from '../../components/PrivateStorageImage';
 
 const AdminObservations = () => {
   const { observations, projects, updateObservationStatus } = useData();
@@ -32,14 +33,18 @@ const AdminObservations = () => {
             </thead>
             <tbody>
               {observations.map(obs => {
-                const project = projects.find(p => p.id === obs.project_id);
+                const project = projects.find(p => String(p.id) === String(obs.project_id));
                 const summary = summarizeObservationData(obs.data);
                 return (
-                  <tr key={obs.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
+                  <tr key={obs.id} data-testid={`observation-${obs.id}`} style={{ borderBottom: '1px solid var(--color-border)' }}>
                     <td style={{ padding: '1rem' }}>
                       <strong>{project?.title || `#${obs.project_id}`}</strong>
                       {obs.photo_url && (
-                        <img src={obs.photo_url} alt="" style={{ display: 'block', width: 48, height: 48, objectFit: 'cover', borderRadius: 4, marginTop: 4 }} />
+                        <PrivateStorageImage
+                          path={obs.photo_url}
+                          alt=""
+                          style={{ display: 'block', width: 48, height: 48, objectFit: 'cover', borderRadius: 4, marginTop: 4 }}
+                        />
                       )}
                     </td>
                     <td style={{ padding: '1rem', fontSize: '0.85rem', maxWidth: 220 }}>
@@ -60,11 +65,15 @@ const AdminObservations = () => {
                     <td style={{ padding: '1rem', textAlign: 'right' }}>
                       {obs.status === 'pending' && (
                         <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
-                          <button onClick={() => updateObservationStatus(obs.id, 'approved')}
+                          <button
+                            aria-label={`Έγκριση παρατήρησης ${obs.id}`}
+                            onClick={() => updateObservationStatus(obs.id, 'approved')}
                             style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-primary)' }}>
                             <CheckCircle size={18} />
                           </button>
-                          <button onClick={() => updateObservationStatus(obs.id, 'rejected')}
+                          <button
+                            aria-label={`Απόρριψη παρατήρησης ${obs.id}`}
+                            onClick={() => updateObservationStatus(obs.id, 'rejected')}
                             style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#991b1b' }}>
                             <XCircle size={18} />
                           </button>

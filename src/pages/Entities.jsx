@@ -1,11 +1,49 @@
 import { Building2, Handshake, Lightbulb, PieChart, Send } from 'lucide-react';
-
-
-
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useData } from '../context/DataContext';
+import { useAuth } from '../context/AuthContext';
 
 const Entities = () => {
   const { t } = useTranslation();
+  const { addEntityInquiry } = useData();
+  const { user } = useAuth();
+  const [form, setForm] = useState({
+    organization: '',
+    contact_name: '',
+    email: '',
+    phone: '',
+    message: '',
+    website: '',
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError('');
+    setSubmitting(true);
+    try {
+      // Honeypot: bots commonly fill hidden fields.
+      if (!form.website) {
+        await addEntityInquiry({
+          organization: form.organization,
+          contact_name: form.contact_name,
+          email: form.email,
+          phone: form.phone,
+          message: form.message,
+          user_id: user?.id || null,
+        });
+      }
+      setSubmitted(true);
+      setForm({ organization: '', contact_name: '', email: '', phone: '', message: '', website: '' });
+    } catch (err) {
+      setError(err.message || t('entities.form_error', 'Η αποστολή απέτυχε. Δοκιμάστε ξανά.'));
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   const features = [
     {
@@ -80,31 +118,57 @@ const Entities = () => {
               </p>
             </div>
 
-            <form onSubmit={e => e.preventDefault()}>
+            {submitted && (
+              <div role="status" style={{ padding: '1rem', marginBottom: '1.25rem', background: 'var(--primary-100)', color: 'var(--primary-700)', borderRadius: 'var(--radius-md)' }}>
+                {t('entities.form_success', 'Το αίτημά σας καταχωρίστηκε. Θα επικοινωνήσουμε μαζί σας σύντομα.')}
+              </div>
+            )}
+            {error && (
+              <div role="alert" style={{ padding: '1rem', marginBottom: '1.25rem', color: 'var(--accent-700)' }}>
+                {error}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit}>
+              <input
+                type="text"
+                name="website"
+                value={form.website}
+                onChange={e => setForm({ ...form, website: e.target.value })}
+                tabIndex="-1"
+                autoComplete="off"
+                aria-hidden="true"
+                style={{ position: 'absolute', left: '-10000px' }}
+              />
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(220px, 100%), 1fr))', gap: '1rem' }}>
                 <div className="form-group">
                   <label className="form-label">{t('entities.f_org', 'Όνομα Φορέα / Οργανισμού *')}</label>
-                  <input type="text" className="form-control" placeholder={t('entities.f_org_ph', 'π.χ. Δήμος Ηρακλείου')} required />
+                  <input type="text" className="form-control" placeholder={t('entities.f_org_ph', 'π.χ. Δήμος Ηρακλείου')} required minLength={2} maxLength={200}
+                    value={form.organization} onChange={e => setForm({ ...form, organization: e.target.value })} />
                 </div>
                 <div className="form-group">
                   <label className="form-label">{t('entities.f_name', 'Ονοματεπώνυμο Υπευθύνου *')}</label>
-                  <input type="text" className="form-control" placeholder={t('entities.f_name_ph', 'Ονοματεπώνυμο')} required />
+                  <input type="text" className="form-control" placeholder={t('entities.f_name_ph', 'Ονοματεπώνυμο')} required minLength={2} maxLength={150}
+                    value={form.contact_name} onChange={e => setForm({ ...form, contact_name: e.target.value })} />
                 </div>
                 <div className="form-group">
                   <label className="form-label">{t('entities.f_email', 'Email Επικοινωνίας *')}</label>
-                  <input type="email" className="form-control" placeholder="email@example.gr" required />
+                  <input type="email" className="form-control" placeholder="email@example.gr" required maxLength={320}
+                    value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} />
                 </div>
                 <div className="form-group">
                   <label className="form-label">{t('entities.f_phone', 'Τηλέφωνο')}</label>
-                  <input type="tel" className="form-control" placeholder="+30 ..." />
+                  <input type="tel" className="form-control" placeholder="+30 ..." maxLength={50}
+                    value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} />
                 </div>
               </div>
               <div className="form-group">
                 <label className="form-label">{t('entities.f_desc', 'Σύντομη περιγραφή ενδιαφέροντος *')}</label>
-                <textarea className="form-control" placeholder={t('entities.f_desc_ph', 'Περιγράψτε το ενδιαφέρον ή την προτεινόμενη συνεργασία...')} required />
+                <textarea className="form-control" placeholder={t('entities.f_desc_ph', 'Περιγράψτε το ενδιαφέρον ή την προτεινόμενη συνεργασία...')} required minLength={10} maxLength={5000}
+                  value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} />
               </div>
-              <button type="submit" className="btn btn-primary" style={{ marginTop: '0.5rem' }}>
-                <Send size={16} /> {t('entities.f_submit', 'Αποστολή')}
+              <button type="submit" className="btn btn-primary" style={{ marginTop: '0.5rem' }} disabled={submitting}>
+                <Send size={16} /> {submitting ? t('entities.form_sending', 'Αποστολή...') : t('entities.f_submit', 'Αποστολή')}
               </button>
             </form>
           </div>

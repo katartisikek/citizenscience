@@ -11,6 +11,9 @@ import Entities from './pages/Entities';
 import OpenData from './pages/OpenData';
 import Propose from './pages/Propose';
 import News from './pages/News';
+import NewsDetail from './pages/NewsDetail';
+import LegalPage from './pages/LegalPage';
+import NotFound from './pages/NotFound';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
@@ -24,6 +27,7 @@ import AdminSettings from './pages/admin/AdminSettings';
 import AdminProposals from './pages/admin/AdminProposals';
 import AdminObservations from './pages/admin/AdminObservations';
 import AdminUsers from './pages/admin/AdminUsers';
+import AdminInbox from './pages/admin/AdminInbox';
 
 function App() {
   return (
@@ -41,9 +45,13 @@ function App() {
               <Route path="open-data" element={<OpenData />} />
               <Route path="propose" element={<Propose />} />
               <Route path="news" element={<News />} />
+              <Route path="news/:id" element={<NewsDetail />} />
+              <Route path="privacy" element={<LegalPage type="privacy" />} />
+              <Route path="terms" element={<LegalPage type="terms" />} />
               <Route path="login" element={<Login />} />
               <Route path="register" element={<Register />} />
               <Route path="profile" element={<Profile />} />
+              <Route path="*" element={<NotFound />} />
             </Route>
 
             <Route path="/admin/login" element={<AdminLogin />} />
@@ -54,6 +62,7 @@ function App() {
               <Route path="proposals" element={<AdminProposals />} />
               <Route path="observations" element={<AdminObservations />} />
               <Route path="users" element={<AdminUsers />} />
+              <Route path="inbox" element={<AdminInbox />} />
               <Route path="settings" element={<AdminSettings />} />
             </Route>
           </Routes>

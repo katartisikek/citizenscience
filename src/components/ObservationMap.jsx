@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -32,7 +31,7 @@ const ObservationMap = ({ observations = [], projects = [] }) => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {markers.map(obs => {
-        const project = projects.find(p => p.id === obs.project_id);
+        const project = projects.find(p => String(p.id) === String(obs.project_id));
         return (
           <Marker key={obs.id} position={[obs.lat, obs.lng]}>
             <Popup>

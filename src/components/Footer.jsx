@@ -1,6 +1,9 @@
 import { Mail, Phone, MapPin, Leaf, Globe, Share2, ExternalLink } from 'lucide-react';
+import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useData } from '../context/DataContext';
+import { useAuth } from '../context/AuthContext';
 
 const quickLinks = [
   { nameKey: 'nav.home', path: '/' },
@@ -11,7 +14,37 @@ const quickLinks = [
 ];
 
 const Footer = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const { subscribeNewsletter } = useData();
+  const { user } = useAuth();
+  const [email, setEmail] = useState('');
+  const [consent, setConsent] = useState(false);
+  const [newsletterState, setNewsletterState] = useState({ status: 'idle', message: '' });
+
+  const handleNewsletter = async (event) => {
+    event.preventDefault();
+    setNewsletterState({ status: 'loading', message: '' });
+    try {
+      const result = await subscribeNewsletter({
+        email,
+        locale: i18n.language.startsWith('en') ? 'en' : 'el',
+        user_id: user?.id || null,
+      });
+      setNewsletterState({
+        status: 'success',
+        message: result.alreadySubscribed
+          ? t('footer.newsletter_exists', 'Το email είναι ήδη εγγεγραμμένο.')
+          : t('footer.newsletter_success', 'Η εγγραφή ολοκληρώθηκε.'),
+      });
+      setEmail('');
+      setConsent(false);
+    } catch (err) {
+      setNewsletterState({
+        status: 'error',
+        message: err.message || t('footer.newsletter_error', 'Η εγγραφή απέτυχε. Δοκιμάστε ξανά.'),
+      });
+    }
+  };
 
   return (
     <footer className="footer">
@@ -94,26 +127,46 @@ const Footer = () => {
               <p style={{ fontSize: '0.85rem', marginBottom: '0.75rem', color: 'rgba(255,255,255,0.55)' }}>
                 {t('footer.newsletter')}
               </p>
-              <form onSubmit={e => e.preventDefault()} style={{ display: 'flex', gap: '0.5rem' }}>
-                <input
-                  type="email"
-                  placeholder={t('footer.email_placeholder')}
-                  required
-                  style={{
-                    flex: 1, background: 'rgba(255,255,255,0.07)',
-                    border: '1px solid rgba(255,255,255,0.15)',
-                    borderRadius: 'var(--radius-md)',
-                    padding: '0.6rem 0.875rem',
-                    color: 'white', fontSize: '0.875rem',
-                    outline: 'none', fontFamily: 'inherit',
-                    minWidth: 0,
-                  }}
-                  onFocus={e => e.target.style.borderColor = 'var(--primary-400)'}
-                  onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.15)'}
-                />
-                <button type="submit" className="btn btn-primary" style={{ padding: '0.6rem 1rem', fontSize: '0.875rem', flexShrink: 0 }}>
-                  OK
-                </button>
+              <form onSubmit={handleNewsletter}>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <input
+                    type="email"
+                    placeholder={t('footer.email_placeholder')}
+                    aria-label={t('footer.email_placeholder')}
+                    required
+                    maxLength={320}
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    style={{
+                      flex: 1, background: 'rgba(255,255,255,0.07)',
+                      border: '1px solid rgba(255,255,255,0.15)',
+                      borderRadius: 'var(--radius-md)',
+                      padding: '0.6rem 0.875rem',
+                      color: 'white', fontSize: '0.875rem',
+                      outline: 'none', fontFamily: 'inherit',
+                      minWidth: 0,
+                    }}
+                    onFocus={e => e.target.style.borderColor = 'var(--primary-400)'}
+                    onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.15)'}
+                  />
+                  <button type="submit" className="btn btn-primary" disabled={!consent || newsletterState.status === 'loading'}
+                    style={{ padding: '0.6rem 1rem', fontSize: '0.875rem', flexShrink: 0 }}>
+                    {newsletterState.status === 'loading' ? '...' : 'OK'}
+                  </button>
+                </div>
+                <label style={{ display: 'flex', alignItems: 'flex-start', gap: '0.4rem', marginTop: '0.6rem', fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)' }}>
+                  <input type="checkbox" required checked={consent} onChange={e => setConsent(e.target.checked)} />
+                  <span>
+                    {t('footer.newsletter_consent', 'Συμφωνώ με την επεξεργασία του email μου σύμφωνα με την')}{' '}
+                    <Link to="/privacy" style={{ color: 'var(--primary-300)' }}>{t('footer.privacy', 'Πολιτική Απορρήτου')}</Link>.
+                  </span>
+                </label>
+                {newsletterState.message && (
+                  <p role={newsletterState.status === 'error' ? 'alert' : 'status'}
+                    style={{ fontSize: '0.8rem', margin: '0.5rem 0 0', color: newsletterState.status === 'error' ? 'var(--accent-300)' : 'var(--primary-300)' }}>
+                    {newsletterState.message}
+                  </p>
+                )}
               </form>
             </div>
           </div>
@@ -124,8 +177,8 @@ const Footer = () => {
         <div className="footer-bottom">
           <span>{t('footer.rights')}</span>
           <span style={{ display: 'flex', gap: '1.5rem' }}>
-            <a href="#" style={{ color: 'rgba(255,255,255,0.45)' }}>{t('footer.privacy', 'Πολιτική Απορρήτου')}</a>
-            <a href="#" style={{ color: 'rgba(255,255,255,0.45)' }}>{t('footer.terms', 'Όροι Χρήσης')}</a>
+            <Link to="/privacy" style={{ color: 'rgba(255,255,255,0.45)' }}>{t('footer.privacy', 'Πολιτική Απορρήτου')}</Link>
+            <Link to="/terms" style={{ color: 'rgba(255,255,255,0.45)' }}>{t('footer.terms', 'Όροι Χρήσης')}</Link>
           </span>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Users, Target, Globe, BookOpen, ChevronRight, ArrowRight } from 'lucide-react';
+import { Users, Target, Globe, ChevronRight, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import { useTranslation } from 'react-i18next';
