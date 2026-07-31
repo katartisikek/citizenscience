@@ -259,7 +259,7 @@ export const DataProvider = ({ children }) => {
       setProfiles(nextProfiles);
       setUsingLocal(false);
     } catch (error) {
-      setUsingLocal(false);
+      loadLocal();
       setLoadError(error.message || 'Αποτυχία σύνδεσης με το Supabase');
     }
   }, [loadLocal, profile?.role, user?.id]);
