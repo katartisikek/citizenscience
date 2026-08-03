@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);
       if (event === 'PASSWORD_RECOVERY' && window.location.pathname !== '/reset-password') {
         window.location.replace('/reset-password');
@@ -38,7 +38,10 @@ export const AuthProvider = ({ children }) => {
       }
 
       if (session?.user) {
-        setProfile(await fetchProfile(session.user.id));
+        // Supabase calls inside onAuthStateChange can deadlock its internal auth lock.
+        setTimeout(() => {
+          fetchProfile(session.user.id).then(setProfile);
+        }, 0);
       } else {
         setProfile(null);
       }
