@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect, useContext } from 'react';
-import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { supabase, isSupabaseConfigured, passwordRecoverySession } from '../lib/supabase';
 
 const AuthContext = createContext();
 
@@ -22,13 +22,24 @@ export const AuthProvider = ({ children }) => {
       return;
     }
 
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
+    const initializeSession = async () => {
+      if (passwordRecoverySession) {
+        await passwordRecoverySession;
+        window.history.replaceState(
+          window.history.state,
+          '',
+          `${window.location.pathname}${window.location.search}`,
+        );
+      }
+      const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user ?? null);
       if (session?.user) {
         setProfile(await fetchProfile(session.user.id));
       }
       setLoading(false);
-    });
+    };
+
+    initializeSession().catch(() => setLoading(false));
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);

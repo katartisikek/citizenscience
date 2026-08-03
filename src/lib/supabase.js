@@ -6,6 +6,11 @@ const initialSearch = typeof window !== 'undefined' ? window.location.search : '
 const initialHash = typeof window !== 'undefined' ? window.location.hash : '';
 const initialHashParams = new URLSearchParams(initialHash.replace(/^#/, ''));
 const isPasswordRecoveryUrl = initialHashParams.get('type') === 'recovery';
+const recoveryAccessToken = initialHashParams.get('access_token');
+const recoveryRefreshToken = initialHashParams.get('refresh_token');
+const hasRecoveryTokens = Boolean(
+  isPasswordRecoveryUrl && recoveryAccessToken && recoveryRefreshToken,
+);
 
 if (typeof window !== 'undefined' && isPasswordRecoveryUrl) {
   // Legacy demo data can fill localStorage and prevent Supabase from persisting
@@ -36,5 +41,14 @@ if (
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
 
 export const supabase = isSupabaseConfigured
-  ? createClient(supabaseUrl, supabaseAnonKey)
+  ? createClient(supabaseUrl, supabaseAnonKey, {
+      auth: { detectSessionInUrl: !hasRecoveryTokens },
+    })
+  : null;
+
+export const passwordRecoverySession = supabase && hasRecoveryTokens
+  ? supabase.auth.setSession({
+      access_token: recoveryAccessToken,
+      refresh_token: recoveryRefreshToken,
+    })
   : null;
