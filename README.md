@@ -39,6 +39,17 @@ npm run dev
    ```
 8. Κάντε restart το Vite (`npm run dev`) ώστε να φορτωθεί το `.env`
 
+### Email επαναφοράς κωδικού
+
+Στο Supabase ανοίξτε **Authentication → URL Configuration** και προσθέστε στα
+Redirect URLs:
+
+- `http://localhost:5173/reset-password`
+- `https://<το-domain-σας>/reset-password`
+
+Το email αποστέλλεται από το template **Authentication → Email Templates →
+Reset Password**. Για production αποστολές συνιστάται η σύνδεση custom SMTP.
+
 **Έλεγχος E2E:** εγγραφή πολίτη → εγγραφή σε Project από το Profile → Collect
 (GPS + φωτο) → Admin Observations → Approve → Open Data χάρτης
 

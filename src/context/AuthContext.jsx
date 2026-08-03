@@ -96,6 +96,20 @@ export const AuthProvider = ({ children }) => {
     sessionStorage.removeItem('admin_auth');
   };
 
+  const requestPasswordReset = async (email) => {
+    if (!supabase) throw new Error('Supabase not configured');
+    const { error } = await supabase.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    if (error) throw error;
+  };
+
+  const updatePassword = async (password) => {
+    if (!supabase) throw new Error('Supabase not configured');
+    const { error } = await supabase.auth.updateUser({ password });
+    if (error) throw error;
+  };
+
   const isAdmin = profile?.role === 'admin'
     || (!isSupabaseConfigured && sessionStorage.getItem('admin_auth') === 'true');
 
@@ -109,6 +123,8 @@ export const AuthProvider = ({ children }) => {
       signUp,
       signIn,
       signOut,
+      requestPasswordReset,
+      updatePassword,
       refreshProfile: () => user && fetchProfile(user.id).then(setProfile),
     }}>
       {children}

@@ -37,3 +37,13 @@ test('private data is not exposed through anonymous REST access', async ({ page 
   expect(result.profiles).toEqual([]);
   expect(result.observations).toEqual([]);
 });
+
+test('password recovery pages are available', async ({ page }) => {
+  await page.goto('/login');
+  await page.getByRole('link', { name: 'Ξεχάσατε τον κωδικό σας;' }).click();
+  await expect(page.getByRole('heading', { name: 'Ξεχάσατε τον κωδικό;' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Αποστολή email επαναφοράς' })).toBeVisible();
+
+  await page.goto('/reset-password');
+  await expect(page.getByRole('heading', { name: 'Ο σύνδεσμος δεν είναι έγκυρος' })).toBeVisible();
+});

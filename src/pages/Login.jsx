@@ -69,6 +69,9 @@ const Login = () => {
           </button>
         </form>
 
+        <p style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.9rem' }}>
+          <Link to="/forgot-password">Ξεχάσατε τον κωδικό σας;</Link>
+        </p>
         <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.9rem', color: 'var(--color-text-light)' }}>
           Δεν έχετε λογαριασμό; <Link to="/register">Εγγραφή</Link>
         </p>

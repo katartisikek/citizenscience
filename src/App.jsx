@@ -15,6 +15,8 @@ import NewsDetail from './pages/NewsDetail';
 import LegalPage from './pages/LegalPage';
 import NotFound from './pages/NotFound';
 import Login from './pages/Login';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
 
@@ -49,6 +51,8 @@ function App() {
               <Route path="privacy" element={<LegalPage type="privacy" />} />
               <Route path="terms" element={<LegalPage type="terms" />} />
               <Route path="login" element={<Login />} />
+              <Route path="forgot-password" element={<ForgotPassword />} />
+              <Route path="reset-password" element={<ResetPassword />} />
               <Route path="register" element={<Register />} />
               <Route path="profile" element={<Profile />} />
               <Route path="*" element={<NotFound />} />

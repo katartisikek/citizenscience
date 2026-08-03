@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Leaf, Mail, Lock } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
@@ -68,6 +68,11 @@ const Login = () => {
           </button>
         </form>
 
+        {isSupabaseConfigured && (
+          <p style={{ marginTop: '1rem', fontSize: '0.9rem' }}>
+            <Link to="/forgot-password">Ξεχάσατε τον κωδικό σας;</Link>
+          </p>
+        )}
         {!isSupabaseConfigured && (
           <p style={{ marginTop: '2rem', fontSize: '0.85rem', color: 'var(--color-text-light)' }}>
             Demo mode — κωδικός: <strong>admin123</strong>
