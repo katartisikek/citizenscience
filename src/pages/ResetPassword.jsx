@@ -1,15 +1,39 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CheckCircle, KeyRound, Lock } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const ResetPassword = () => {
-  const { user, loading: authLoading, updatePassword, signOut } = useAuth();
+  const { user, loading: authLoading, verifyPasswordRecovery, updatePassword, signOut } = useAuth();
+  const recoveryTokenHash = new URLSearchParams(window.location.search).get('token_hash');
   const [password, setPassword] = useState('');
   const [confirmation, setConfirmation] = useState('');
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [verifying, setVerifying] = useState(Boolean(recoveryTokenHash));
+  const [linkError, setLinkError] = useState('');
+
+  useEffect(() => {
+    if (!recoveryTokenHash) return;
+    let active = true;
+
+    verifyPasswordRecovery(recoveryTokenHash)
+      .then(() => {
+        if (!active) return;
+        window.history.replaceState(window.history.state, '', '/reset-password');
+      })
+      .catch((err) => {
+        if (active) setLinkError(err.message || 'Ο σύνδεσμος δεν είναι έγκυρος.');
+      })
+      .finally(() => {
+        if (active) setVerifying(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [recoveryTokenHash, verifyPasswordRecovery]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -51,16 +75,16 @@ const ResetPassword = () => {
       );
     }
 
-    if (authLoading) {
+    if (authLoading || verifying) {
       return <p style={{ textAlign: 'center' }}>Έλεγχος συνδέσμου επαναφοράς...</p>;
     }
 
-    if (!user) {
+    if (linkError || !user) {
       return (
         <div role="alert" style={{ textAlign: 'center' }}>
           <h1 style={{ fontSize: '1.5rem' }}>Ο σύνδεσμος δεν είναι έγκυρος</h1>
           <p style={{ color: 'var(--color-text-light)', marginBottom: '1.5rem' }}>
-            Ο σύνδεσμος μπορεί να έχει λήξει ή να έχει ήδη χρησιμοποιηθεί.
+            {linkError || 'Ο σύνδεσμος μπορεί να έχει λήξει ή να έχει ήδη χρησιμοποιηθεί.'}
           </p>
           <Link to="/forgot-password" className="btn btn-primary">Αποστολή νέου συνδέσμου</Link>
         </div>

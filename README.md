@@ -49,6 +49,13 @@ Redirect URLs:
 
 Το email αποστέλλεται από το template **Authentication → Email Templates →
 Reset Password**. Για production αποστολές συνιστάται η σύνδεση custom SMTP.
+Ο σύνδεσμος του Reset Password template πρέπει να χρησιμοποιεί token hash:
+
+```html
+<a href="{{ .RedirectTo }}?token_hash={{ .TokenHash }}&type=recovery">
+  Αλλαγή κωδικού
+</a>
+```
 
 ### Πρόσκληση νέων admins
 

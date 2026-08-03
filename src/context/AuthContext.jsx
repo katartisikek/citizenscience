@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useContext } from 'react';
+import { createContext, useState, useEffect, useContext, useCallback } from 'react';
 import { supabase, isSupabaseConfigured, passwordRecoverySession } from '../lib/supabase';
 
 const AuthContext = createContext();
@@ -10,11 +10,11 @@ export const AuthProvider = ({ children }) => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchProfile = async (userId) => {
+  const fetchProfile = useCallback(async (userId) => {
     if (!supabase) return null;
     const { data } = await supabase.from('profiles').select('*').eq('id', userId).single();
     return data;
-  };
+  }, []);
 
   useEffect(() => {
     if (!isSupabaseConfigured) {
@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }) => {
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [fetchProfile]);
 
   const signUp = async ({
     email,
@@ -129,6 +129,20 @@ export const AuthProvider = ({ children }) => {
     if (error) throw error;
   };
 
+  const verifyPasswordRecovery = useCallback(async (tokenHash) => {
+    if (!supabase) throw new Error('Supabase not configured');
+    const { data, error } = await supabase.auth.verifyOtp({
+      token_hash: tokenHash,
+      type: 'recovery',
+    });
+    if (error) throw error;
+    setUser(data.user ?? null);
+    if (data.user) {
+      setProfile(await fetchProfile(data.user.id));
+    }
+    return data;
+  }, [fetchProfile]);
+
   const isAdmin = profile?.role === 'admin'
     || (!isSupabaseConfigured && sessionStorage.getItem('admin_auth') === 'true');
 
@@ -143,6 +157,7 @@ export const AuthProvider = ({ children }) => {
       signIn,
       signOut,
       requestPasswordReset,
+      verifyPasswordRecovery,
       updatePassword,
       refreshProfile: () => user && fetchProfile(user.id).then(setProfile),
     }}>
