@@ -1,14 +1,20 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Leaf, Mail, Lock, User } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
-  const { signIn, isSupabaseConfigured } = useAuth();
+  const { signIn, isSupabaseConfigured, user, isAdmin, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!authLoading && user && isAdmin) {
+      navigate('/admin', { replace: true });
+    }
+  }, [authLoading, isAdmin, navigate, user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,9 +32,9 @@ const Login = () => {
       }
       const { profile: loggedProfile } = await signIn(form);
       if (loggedProfile?.role === 'admin') {
-        navigate('/admin');
+        navigate('/admin', { replace: true });
       } else {
-        navigate('/profile');
+        navigate('/profile', { replace: true });
       }
     } catch (err) {
       setError(err.message || 'Σφάλμα σύνδεσης');

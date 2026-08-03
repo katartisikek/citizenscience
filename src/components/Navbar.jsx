@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
@@ -36,6 +36,8 @@ const Navbar = () => {
     i18n.changeLanguage(newLang);
   };
 
+  const accountPath = isAdmin ? '/admin' : user ? '/profile' : '/login';
+
   return (
     <>
       <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
@@ -63,9 +65,9 @@ const Navbar = () => {
 
           <div className="nav-actions">
             <NavLink
-              to={user ? '/profile' : '/login'}
+              to={accountPath}
               className="nav-action"
-              title={user ? t('nav.profile', 'Προφίλ') : t('nav.login', 'Είσοδος')}
+              title={isAdmin ? 'Admin Panel' : user ? t('nav.profile', 'Προφίλ') : t('nav.login', 'Είσοδος')}
             >
               <User size={20} />
               <span>{t('nav.account', 'Λογαριασμός')}</span>
@@ -108,7 +110,7 @@ const Navbar = () => {
             </NavLink>
           ))}
           <NavLink
-            to={user ? '/profile' : '/login'}
+            to={accountPath}
             className="nav-link"
             onClick={() => setIsMobileOpen(false)}
           >
