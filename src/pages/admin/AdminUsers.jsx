@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Users, Shield, ShieldOff } from 'lucide-react';
+import { Users, Shield, ShieldOff, UserPlus } from 'lucide-react';
 import { useData } from '../../context/DataContext';
 import { useAuth } from '../../context/AuthContext';
 
@@ -11,11 +11,14 @@ const roleLabels = {
 };
 
 const AdminUsers = () => {
-  const { profiles, updateUserRole } = useData();
+  const { profiles, inviteAdmin, updateUserRole } = useData();
   const { user, profile } = useAuth();
   const [busyId, setBusyId] = useState(null);
   const [error, setError] = useState('');
   const [filter, setFilter] = useState('');
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviting, setInviting] = useState(false);
+  const [inviteSuccess, setInviteSuccess] = useState('');
 
   const adminCount = profiles.filter((p) => p.role === 'admin').length;
 
@@ -27,6 +30,22 @@ const AdminUsers = () => {
       (p.full_name || '').toLowerCase().includes(q)
     );
   });
+
+  const handleInvite = async (event) => {
+    event.preventDefault();
+    setError('');
+    setInviteSuccess('');
+    setInviting(true);
+    try {
+      await inviteAdmin(inviteEmail);
+      setInviteSuccess(`Η πρόσκληση admin στάλθηκε στο ${inviteEmail.trim().toLowerCase()}.`);
+      setInviteEmail('');
+    } catch (err) {
+      setError(err.message || 'Η πρόσκληση admin απέτυχε.');
+    } finally {
+      setInviting(false);
+    }
+  };
 
   const promote = async (target) => {
     setError('');
@@ -77,10 +96,38 @@ const AdminUsers = () => {
       </div>
 
       <p style={{ color: 'var(--color-text-light)', marginBottom: '1.5rem' }}>
-        Ορίστε άλλους administrators από εγγεγραμμένους χρήστες. Συνδεδεμένος: <strong>{profile?.email || user?.email}</strong>
+        Προσκαλέστε νέο administrator ή ορίστε admin έναν εγγεγραμμένο χρήστη. Συνδεδεμένος: <strong>{profile?.email || user?.email}</strong>
       </p>
 
-      {error && <p style={{ color: '#c05530', marginBottom: '1rem' }}>{error}</p>}
+      <form onSubmit={handleInvite} className="card" style={{ padding: '1.25rem', marginBottom: '1.5rem' }}>
+        <h2 style={{ fontSize: '1.15rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <UserPlus size={20} /> Πρόσκληση νέου admin
+        </h2>
+        <p style={{ color: 'var(--color-text-light)', fontSize: '0.9rem', marginBottom: '1rem' }}>
+          Ο παραλήπτης θα λάβει email για να ορίσει τον προσωπικό του κωδικό.
+        </p>
+        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-end', flexWrap: 'wrap' }}>
+          <div className="form-group" style={{ flex: '1 1 260px', margin: 0 }}>
+            <label className="form-label" htmlFor="admin-invite-email">Email νέου admin</label>
+            <input
+              id="admin-invite-email"
+              type="email"
+              className="form-control"
+              required
+              maxLength={320}
+              autoComplete="email"
+              value={inviteEmail}
+              onChange={(event) => setInviteEmail(event.target.value)}
+            />
+          </div>
+          <button type="submit" className="btn btn-primary" disabled={inviting}>
+            <UserPlus size={16} /> {inviting ? 'Αποστολή...' : 'Αποστολή πρόσκλησης'}
+          </button>
+        </div>
+      </form>
+
+      {inviteSuccess && <p role="status" style={{ color: 'var(--primary-700)', marginBottom: '1rem' }}>{inviteSuccess}</p>}
+      {error && <p role="alert" style={{ color: '#c05530', marginBottom: '1rem' }}>{error}</p>}
 
       <div className="card" style={{ overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>

@@ -50,6 +50,23 @@ Redirect URLs:
 Το email αποστέλλεται από το template **Authentication → Email Templates →
 Reset Password**. Για production αποστολές συνιστάται η σύνδεση custom SMTP.
 
+### Πρόσκληση νέων admins
+
+Η σελίδα **Admin → Χρήστες** χρησιμοποιεί την Edge Function `invite-admin`.
+Για να την ενεργοποιήσετε:
+
+```bash
+npx supabase login
+npx supabase link --project-ref <project-ref>
+npx supabase secrets set APP_URL=https://<το-domain-σας>
+npx supabase functions deploy invite-admin
+```
+
+Το Supabase gateway επαληθεύει το JWT και η function ελέγχει επιπλέον εσωτερικά
+τον χρήστη και τον admin ρόλο του πριν
+χρησιμοποιήσει το server-side `service_role`. Μην προσθέσετε ποτέ το
+`SUPABASE_SERVICE_ROLE_KEY` στο Vite ή στο repository.
+
 **Έλεγχος E2E:** εγγραφή πολίτη → εγγραφή σε Project από το Profile → Collect
 (GPS + φωτο) → Admin Observations → Approve → Open Data χάρτης
 

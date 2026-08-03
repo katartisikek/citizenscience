@@ -600,6 +600,27 @@ export const DataProvider = ({ children }) => {
     setProfiles(prev => prev.map(p => p.id === userId ? { ...p, role } : p));
   };
 
+  const inviteAdmin = async (email) => {
+    const normalizedEmail = email.trim().toLowerCase();
+    if (usingLocal) {
+      const item = {
+        id: crypto.randomUUID(),
+        email: normalizedEmail,
+        full_name: '',
+        role: 'admin',
+        created_at: new Date().toISOString(),
+      };
+      setProfiles(prev => [item, ...prev]);
+      return item;
+    }
+    const { data, error } = await supabase.functions.invoke('invite-admin', {
+      body: { email: normalizedEmail },
+    });
+    if (error) throw error;
+    await loadFromSupabase();
+    return data;
+  };
+
   const updateProfileFields = async (userId, fields) => {
     if (usingLocal) {
       setProfiles(prev => prev.map(p => p.id === userId ? { ...p, ...fields } : p));
@@ -622,7 +643,7 @@ export const DataProvider = ({ children }) => {
       newsletterSubscribers, subscribeNewsletter,
       proposals, addProposal, updateProposalStatus,
       observations, addObservation, updateObservationStatus,
-      profiles, updateUserRole, updateProfileFields,
+      profiles, inviteAdmin, updateUserRole, updateProfileFields,
       memberships, myProjects, joinProject, isMemberOf, loadMemberships,
       uploadPhoto, uploadFile, getFileUrl,
       loading, usingLocal, loadError, refresh,
