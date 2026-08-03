@@ -7,6 +7,20 @@ const initialHash = typeof window !== 'undefined' ? window.location.hash : '';
 const initialHashParams = new URLSearchParams(initialHash.replace(/^#/, ''));
 const isPasswordRecoveryUrl = initialHashParams.get('type') === 'recovery';
 
+if (typeof window !== 'undefined' && isPasswordRecoveryUrl) {
+  // Legacy demo data can fill localStorage and prevent Supabase from persisting
+  // the one-time recovery session. Remove only app-demo and stale PKCE entries.
+  try {
+    Object.keys(window.localStorage).forEach((key) => {
+      if (key.startsWith('cs_') || key.endsWith('-auth-token-code-verifier')) {
+        window.localStorage.removeItem(key);
+      }
+    });
+  } catch {
+    // Storage may be unavailable in privacy-restricted browser contexts.
+  }
+}
+
 if (
   typeof window !== 'undefined'
   && isPasswordRecoveryUrl
