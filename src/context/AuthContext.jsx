@@ -1,5 +1,10 @@
 import { createContext, useState, useEffect, useContext } from 'react';
-import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import {
+  supabase,
+  isSupabaseConfigured,
+  isPasswordRecoveryUrl,
+  passwordRecoveryUrlSuffix,
+} from '../lib/supabase';
 
 const AuthContext = createContext();
 
@@ -19,6 +24,11 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (!isSupabaseConfigured) {
       setLoading(false);
+      return;
+    }
+
+    if (isPasswordRecoveryUrl && window.location.pathname !== '/reset-password') {
+      window.location.replace(`/reset-password${passwordRecoveryUrlSuffix}`);
       return;
     }
 
