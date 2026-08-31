@@ -75,9 +75,6 @@ const Login = () => {
         <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.9rem', color: 'var(--color-text-light)' }}>
           Δεν έχετε λογαριασμό; <Link to="/register">Εγγραφή</Link>
         </p>
-        <p style={{ textAlign: 'center', marginTop: '0.75rem', fontSize: '0.85rem' }}>
-          <Link to="/admin/login"><User size={14} /> Admin</Link>
-        </p>
       </div>
     </div>
   );
