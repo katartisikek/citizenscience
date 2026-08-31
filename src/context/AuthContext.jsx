@@ -12,7 +12,11 @@ export const AuthProvider = ({ children }) => {
 
   const fetchProfile = useCallback(async (userId) => {
     if (!supabase) return null;
-    const { data } = await supabase.from('profiles').select('*').eq('id', userId).single();
+    const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single();
+    if (error) {
+      console.error('Error fetching profile:', error);
+      throw new Error('Σφάλμα προφίλ (RLS/DB): ' + error.message);
+    }
     return data;
   }, []);
 

@@ -17,9 +17,14 @@ const Login = () => {
     try {
       if (isSupabaseConfigured) {
         const { profile: loggedProfile } = await signIn(form);
-        if (loggedProfile?.role !== 'admin') {
+        if (!loggedProfile) {
           await signOut();
-          setError('Αυτός ο λογαριασμός δεν έχει δικαιώματα διαχειριστή.');
+          setError('Δεν βρέθηκε το προφίλ χρήστη στη βάση.');
+          return;
+        }
+        if (loggedProfile.role !== 'admin') {
+          await signOut();
+          setError(`Αυτός ο λογαριασμός δεν έχει δικαιώματα διαχειριστή. (Ρόλος: "${loggedProfile.role}")`);
           return;
         }
         navigate('/admin');
