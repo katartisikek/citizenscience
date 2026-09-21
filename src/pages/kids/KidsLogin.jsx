@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useKidsAuth } from '../../context/KidsAuthContext';
 import '../../kids.css';
 
@@ -25,20 +25,33 @@ const KidsLogin = () => {
       await login(classCode, alias, pin);
       navigate('/kids');
     } catch {
-      // Error is set in context
+      // Error handles in context
     }
   };
 
   return (
     <div className="kids-login">
-      <div className="kids-login-card kids-animate-in">
-        <div className="kids-login-mascot">🌿</div>
-        <div className="kids-login-logo">
-          <h1>Citizen Science Kids</h1>
-          <p>Εξερεύνησε τη φύση γύρω σου!</p>
-        </div>
+      <div className="kids-login-card">
+        {/* 3D Pixar Style Cartoon Mascot Avatar */}
+        <img
+          src="/assets/kids_mascot_hero.jpg"
+          alt="Kids Cartoon Mascot"
+          className="kids-mascot-avatar"
+        />
 
-        {error && <div className="kids-login-error">⚠️ {error}</div>}
+        <h1 className="kids-login-title">Citizen Science Kids</h1>
+        <p style={{ color: '#64748B', fontFamily: "'Quicksand', sans-serif", fontWeight: 600, marginBottom: '20px' }}>
+          🌿 Εξερεύνησε τη φύση γύρω σου!
+        </p>
+
+        {error && (
+          <div style={{
+            background: '#FFE2E2', border: '2px solid #FF8E8E', color: '#D63031',
+            padding: '10px 14px', borderRadius: '16px', fontSize: '0.85rem', fontWeight: 700, marginBottom: '16px',
+          }}>
+            ⚠️ {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit}>
           <div className="kids-input-group">
@@ -50,7 +63,6 @@ const KidsLogin = () => {
               value={classCode}
               onChange={(e) => setClassCode(e.target.value.toUpperCase())}
               autoComplete="off"
-              id="kids-class-code"
             />
           </div>
 
@@ -59,16 +71,15 @@ const KidsLogin = () => {
             <input
               type="text"
               className="kids-input"
-              placeholder="π.χ. B2-0147"
+              placeholder="π.χ. B2-0001"
               value={alias}
               onChange={(e) => setAlias(e.target.value.toUpperCase())}
               autoComplete="off"
-              id="kids-alias"
             />
           </div>
 
           <div className="kids-input-group">
-            <label className="kids-input-label">🔑 PIN</label>
+            <label className="kids-input-label">🔑 4-Ψήφιο PIN</label>
             <input
               type="password"
               className="kids-input"
@@ -78,51 +89,30 @@ const KidsLogin = () => {
               maxLength={8}
               autoComplete="off"
               inputMode="numeric"
-              id="kids-pin"
             />
           </div>
 
           <button
             type="submit"
-            className="kids-btn kids-btn-primary kids-btn-lg kids-btn-block"
+            className="kids-btn kids-btn-primary"
+            style={{ width: '100%', marginTop: '10px', fontSize: '1.2rem', padding: '16px' }}
             disabled={loading}
-            id="kids-login-btn"
           >
-            {loading ? (
-              <span>⏳ Σύνδεση...</span>
-            ) : (
-              <span>🚀 Ας ξεκινήσουμε!</span>
-            )}
+            {loading ? <span>⏳ Σύνδεση...</span> : <span>🚀 Ας ξεκινήσουμε!</span>}
           </button>
         </form>
 
         <div style={{
-          marginTop: 'var(--kids-space-xl)',
-          textAlign: 'center',
-          padding: 'var(--kids-space-md)',
-          background: 'rgba(108, 99, 255, 0.04)',
-          borderRadius: 'var(--kids-radius-md)',
-          fontSize: '0.8rem',
-          color: 'var(--kids-text-light)',
+          marginTop: '20px', padding: '12px', background: '#F8FAFC', borderRadius: '16px',
+          fontSize: '0.8rem', color: '#64748B', border: '2px dashed #CBD5E1',
         }}>
-          <p style={{ margin: '0 0 4px', fontWeight: 600 }}>💡 Demo Mode</p>
-          <p style={{ margin: 0 }}>Class: ECO-B2-26 · Alias: B2-0001 · PIN: 1234</p>
+          💡 <strong>Demo Mode:</strong> Class: <code>ECO-B2-26</code> · Alias: <code>B2-0001</code> · PIN: <code>1234</code>
         </div>
 
-        <div style={{
-          textAlign: 'center',
-          marginTop: 'var(--kids-space-md)',
-        }}>
-          <a
-            href="/"
-            style={{
-              color: 'var(--kids-text-muted)',
-              textDecoration: 'none',
-              fontSize: '0.8rem',
-            }}
-          >
-            ← Πίσω στο Citizen Science Hub
-          </a>
+        <div style={{ marginTop: '16px' }}>
+          <Link to="/" style={{ color: '#6C63FF', fontSize: '0.85rem', fontWeight: 700, textDecoration: 'none' }}>
+            &larr; Πίσω στο Citizen Science Hub
+          </Link>
         </div>
       </div>
     </div>
