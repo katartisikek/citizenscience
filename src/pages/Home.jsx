@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Users, Target, Globe, ChevronRight, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useData } from '../context/DataContext';
+import { useData, THEMATIC_CATEGORIES } from '../context/DataContext';
 import { useTranslation } from 'react-i18next';
 
 /* Scroll-reveal hook */
@@ -67,7 +67,7 @@ const stats = [
 ];
 
 const Home = () => {
-  const { settings, loading } = useData();
+  const { settings, projects, loading } = useData();
   const { t, i18n } = useTranslation();
 
   const tData = (obj, key) => i18n.language.startsWith('en') && obj[`${key}_en`] ? obj[`${key}_en`] : obj[key];
@@ -121,6 +121,114 @@ const Home = () => {
             ))}
           </div>
         </div>
+      </RevealSection>
+
+      {/* ── 4 THEMATIC CATEGORIES CARDS ───────────────── */}
+      <RevealSection>
+        <section className="section" style={{ paddingTop: '1rem', paddingBottom: '3rem' }}>
+          <div className="container">
+            <div className="section-header centered" style={{ marginBottom: '2.5rem' }}>
+              <span className="overline">Θεματικές Ενότητες</span>
+              <h2>4 Βασικές Θεματικές Κατηγορίες Projects</h2>
+              <p className="text-lead" style={{ margin: '0.75rem auto 0', maxWidth: '680px' }}>
+                Επιλέξτε μία κατηγορία για να εξερευνήσετε τα αντίστοιχα Citizen Science projects της Κρήτης.
+              </p>
+            </div>
+
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+              gap: '1.5rem',
+            }}>
+              {THEMATIC_CATEGORIES.map(cat => {
+                const catProjectsCount = projects.filter(p => p.thematic_category === cat.id).length;
+                return (
+                  <Link
+                    key={cat.id}
+                    to={`/projects?category=${cat.id}`}
+                    style={{ textDecoration: 'none', color: 'inherit' }}
+                  >
+                    <div
+                      className="bento-card"
+                      style={{
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                        overflow: 'hidden',
+                        borderRadius: 'var(--radius-xl)',
+                        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                      }}
+                    >
+                      <div style={{ position: 'relative', height: 160, overflow: 'hidden' }}>
+                        <img
+                          src={cat.image}
+                          alt={cat.title}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                        <div style={{
+                          position: 'absolute', inset: 0,
+                          background: 'linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(15, 23, 42, 0.7) 100%)',
+                          display: 'flex', alignItems: 'flex-end', padding: '1rem',
+                        }}>
+                          <span style={{
+                            fontSize: '1.8rem',
+                            background: 'white',
+                            width: 44, height: 44, borderRadius: '50%',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            boxShadow: '0 4px 10px rgba(0,0,0,0.2)',
+                          }}>
+                            {cat.icon}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div style={{ padding: '1.5rem', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                        <div>
+                          <span style={{
+                            display: 'inline-block',
+                            padding: '4px 10px',
+                            borderRadius: '12px',
+                            fontSize: '0.78rem',
+                            fontWeight: 700,
+                            backgroundColor: cat.bg,
+                            color: cat.color,
+                            marginBottom: '0.75rem',
+                          }}>
+                            {cat.badgeText}
+                          </span>
+                          <h3 style={{ fontSize: '1.1rem', lineHeight: 1.35, marginBottom: '0.625rem', fontWeight: 700 }}>
+                            {tData(cat, 'title')}
+                          </h3>
+                          <p style={{ fontSize: '0.88rem', color: 'var(--color-text-light)', lineHeight: 1.5, margin: 0 }}>
+                            {tData(cat, 'description')}
+                          </p>
+                        </div>
+
+                        <div style={{
+                          marginTop: '1.25rem',
+                          paddingTop: '0.75rem',
+                          borderTop: '1px solid var(--color-border)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          fontWeight: 700,
+                          fontSize: '0.85rem',
+                          color: cat.color,
+                        }}>
+                          <span>{catProjectsCount} {catProjectsCount === 1 ? 'Project' : 'Projects'}</span>
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            Εξερεύνηση <ArrowRight size={16} />
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </section>
       </RevealSection>
 
       {/* ── INFO CARDS ─────────────────────────────────── */}
