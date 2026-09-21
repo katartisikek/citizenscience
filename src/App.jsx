@@ -39,6 +39,7 @@ import TeacherLayout from './components/TeacherLayout';
 import TeacherDashboard from './pages/teacher/TeacherDashboard';
 import TeacherClassManagement from './pages/teacher/TeacherClassManagement';
 import TeacherObservations from './pages/teacher/TeacherObservations';
+import TeacherLogin from './pages/teacher/TeacherLogin';
 
 // Kids Module
 import KidsLayout from './components/KidsLayout';
@@ -102,6 +103,13 @@ function App() {
             </Route>
 
             {/* ── Teacher Portal ───────────────────────── */}
+            <Route path="/teacher/login" element={
+              <KidsAuthProvider>
+                <KidsDataProvider>
+                  <TeacherLogin />
+                </KidsDataProvider>
+              </KidsAuthProvider>
+            } />
             <Route path="/teacher" element={
               <KidsAuthProvider>
                 <KidsDataProvider>

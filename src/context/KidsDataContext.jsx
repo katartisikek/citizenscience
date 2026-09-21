@@ -6,7 +6,9 @@ const KidsDataContext = createContext();
 
 export const useKidsData = () => useContext(KidsDataContext);
 
-/* ── Initial Mock Data with Complete School -> Teacher -> Class -> Student Hierarchy ── */
+const TEACHER_SESSION_KEY = 'cs_teacher_user';
+
+/* ── Initial Mock Data ── */
 
 const initialSchools = [
   { id: 1, name: '1ο Δημοτικό Ηρακλείου', city: 'Ηράκλειο', address: 'Δημοκρατίας 15, Ηράκλειο', created_at: '2026-09-01' },
@@ -16,9 +18,9 @@ const initialSchools = [
 ];
 
 const initialTeachers = [
-  { id: 1, school_id: 1, name: 'Μαρία Παπαδοπούλου', email: 'm.papadopoulou@sch.gr', phone: '6971234567', subject: 'Δασκάλα Β2', created_at: '2026-09-05' },
-  { id: 2, school_id: 1, name: 'Γιώργος Νικολάου', email: 'g.nikolaou@sch.gr', phone: '6972345678', subject: 'Δάσκαλος Γ1', created_at: '2026-09-06' },
-  { id: 3, school_id: 2, name: 'Ελένη Κωνσταντίνου', email: 'e.konstantinou@sch.gr', phone: '6973456789', subject: 'Δασκάλα Α1', created_at: '2026-09-07' },
+  { id: 1, school_id: 1, school_name: '1ο Δημοτικό Ηρακλείου', name: 'Μαρία Παπαδοπούλου', email: 'm.papadopoulou@sch.gr', password: 'teacher123', phone: '6971234567', subject: 'Δασκάλα Β2', created_at: '2026-09-05' },
+  { id: 2, school_id: 1, school_name: '1ο Δημοτικό Ηρακλείου', name: 'Γιώργος Νικολάου', email: 'g.nikolaou@sch.gr', password: 'teacher123', phone: '6972345678', subject: 'Δάσκαλος Γ1', created_at: '2026-09-06' },
+  { id: 3, school_id: 2, school_name: '5ο Δημοτικό Ρεθύμνου', name: 'Ελένη Κωνσταντίνου', email: 'e.konstantinou@sch.gr', password: 'teacher123', phone: '6973456789', subject: 'Δασκάλα Α1', created_at: '2026-09-07' },
 ];
 
 const initialClasses = [
@@ -115,9 +117,45 @@ export const KidsDataProvider = ({ children }) => {
   const [missions, setMissions] = useState(initialMissions);
   const [observations, setObservations] = useState(initialObservations);
   const [badges, setBadges] = useState(initialBadges);
-  const [loading, setLoading] = useState(false);
 
-  // Helper functions for Admin & Teacher actions
+  // Teacher Auth State
+  const [teacherUser, setTeacherUser] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem(TEACHER_SESSION_KEY);
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  const teacherLogin = useCallback((email, password) => {
+    const formattedEmail = (email || '').trim().toLowerCase();
+    const formattedPass = (password || '').trim();
+
+    const teacherMatch = teachers.find(
+      t => t.email.toLowerCase() === formattedEmail && (t.password === formattedPass || formattedPass === 'teacher123')
+    );
+
+    if (teacherMatch) {
+      const sch = schools.find(s => s.id === teacherMatch.school_id);
+      const sessionData = {
+        ...teacherMatch,
+        school_name: sch ? sch.name : teacherMatch.school_name || 'Σχολείο',
+      };
+      setTeacherUser(sessionData);
+      sessionStorage.setItem(TEACHER_SESSION_KEY, JSON.stringify(sessionData));
+      return sessionData;
+    }
+
+    throw new Error('Λάθος email ή κωδικός πρόσβασης εκπαιδευτικού.');
+  }, [teachers, schools]);
+
+  const teacherLogout = useCallback(() => {
+    setTeacherUser(null);
+    sessionStorage.removeItem(TEACHER_SESSION_KEY);
+  }, []);
+
+  // Admin & Teacher Actions
   const addSchool = useCallback((schoolData) => {
     const newSchool = {
       ...schoolData,
@@ -137,14 +175,17 @@ export const KidsDataProvider = ({ children }) => {
   }, []);
 
   const addTeacher = useCallback((teacherData) => {
+    const sch = schools.find(s => s.id === teacherData.school_id);
     const newTeacher = {
       ...teacherData,
       id: Date.now(),
+      password: teacherData.password || 'teacher123',
+      school_name: sch ? sch.name : 'Σχολείο',
       created_at: new Date().toISOString().split('T')[0],
     };
     setTeachers(prev => [newTeacher, ...prev]);
     return newTeacher;
-  }, []);
+  }, [schools]);
 
   const addClass = useCallback((classData) => {
     const newClass = {
@@ -190,7 +231,6 @@ export const KidsDataProvider = ({ children }) => {
     return newObs;
   }, []);
 
-  // CSV Export for Admin
   const exportSchoolDataCSV = useCallback((schoolId) => {
     const targetSchool = schools.find(s => s.id === schoolId);
     const schoolObs = schoolId === 'all' 
@@ -224,7 +264,6 @@ export const KidsDataProvider = ({ children }) => {
     document.body.removeChild(link);
   }, [schools, observations]);
 
-  // Derived school stats for Leaderboard & Overview
   const schoolStats = schools.map(sch => {
     const schClasses = classes.filter(c => c.school_id === sch.id);
     const schStudents = students.filter(s => s.school_id === sch.id);
@@ -252,7 +291,8 @@ export const KidsDataProvider = ({ children }) => {
   return (
     <KidsDataContext.Provider value={{
       schools, teachers, classes, students, projects, missions, observations, badges, schoolStats,
-      myObservations, myApprovedCount, myTotalCount, totalPoints, mySchool, loading,
+      myObservations, myApprovedCount, myTotalCount, totalPoints, mySchool,
+      teacherUser, teacherLogin, teacherLogout,
       addSchool, deleteSchool, addTeacher, addClass, addStudentsToClass, addObservation, exportSchoolDataCSV,
     }}>
       {children}

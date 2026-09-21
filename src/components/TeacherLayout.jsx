@@ -1,13 +1,23 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { School, Users, ClipboardCheck, LogOut, BookOpen, ChevronLeft } from 'lucide-react';
+import { School, Users, ClipboardCheck, LogOut } from 'lucide-react';
+import { useKidsData } from '../context/KidsDataContext';
 
 const TeacherLayout = () => {
   const navigate = useNavigate();
-  const [teacher] = useState({ name: 'Εκπαιδευτικός Μαρία Παπαδοπούλου', school: 'Δημοτικό Ηρακλείου' });
+  const { teacherUser, teacherLogout } = useKidsData();
+
+  useEffect(() => {
+    if (!teacherUser) {
+      navigate('/teacher/login');
+    }
+  }, [teacherUser, navigate]);
+
+  if (!teacherUser) return null;
 
   const handleLogout = () => {
-    navigate('/login');
+    teacherLogout();
+    navigate('/teacher/login');
   };
 
   return (
@@ -24,11 +34,13 @@ const TeacherLayout = () => {
         zIndex: 40,
       }}>
         <div style={{ padding: '1.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-          <div style={{ fontSize: '0.8rem', color: '#94A3B8', fontWeight: 600, textTransform: 'uppercase' }}>Πύλη Εκπαιδευτικών</div>
-          <h2 style={{ fontSize: '1.15rem', color: 'white', margin: '0.25rem 0 0 0', fontWeight: 700 }}>
-            🌿 CS Kids Teacher
+          <div style={{ fontSize: '0.75rem', color: '#38BDF8', fontWeight: 700, textTransform: 'uppercase' }}>Πύλη Εκπαιδευτικών</div>
+          <h2 style={{ fontSize: '1.1rem', color: 'white', margin: '0.25rem 0 0 0', fontWeight: 800 }}>
+            {teacherUser.name || 'Εκπαιδευτικός'}
           </h2>
-          <div style={{ fontSize: '0.8rem', color: '#38BDF8', marginTop: '0.25rem' }}>{teacher.school}</div>
+          <div style={{ fontSize: '0.8rem', color: '#94A3B8', marginTop: '0.2rem' }}>
+            🏫 {teacherUser.school_name || 'Σχολείο'}
+          </div>
         </div>
 
         <nav style={{ flex: 1, padding: '1.5rem 1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
