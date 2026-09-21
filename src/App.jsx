@@ -1,6 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { DataProvider } from './context/DataContext';
+import { KidsAuthProvider } from './context/KidsAuthContext';
+import { KidsDataProvider } from './context/KidsDataContext';
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import Projects from './pages/Projects';
@@ -30,6 +32,26 @@ import AdminProposals from './pages/admin/AdminProposals';
 import AdminObservations from './pages/admin/AdminObservations';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminInbox from './pages/admin/AdminInbox';
+import AdminKids from './pages/admin/AdminKids';
+
+// Teacher Module
+import TeacherLayout from './components/TeacherLayout';
+import TeacherDashboard from './pages/teacher/TeacherDashboard';
+import TeacherClassManagement from './pages/teacher/TeacherClassManagement';
+import TeacherObservations from './pages/teacher/TeacherObservations';
+
+// Kids Module
+import KidsLayout from './components/KidsLayout';
+import KidsLogin from './pages/kids/KidsLogin';
+import KidsDashboard from './pages/kids/KidsDashboard';
+import KidsObservation from './pages/kids/KidsObservation';
+import KidsDiscoveries from './pages/kids/KidsDiscoveries';
+import KidsProgress from './pages/kids/KidsProgress';
+import KidsBadges from './pages/kids/KidsBadges';
+import KidsClass from './pages/kids/KidsClass';
+import KidsSchool from './pages/kids/KidsSchool';
+import KidsExploreCrete from './pages/kids/KidsExploreCrete';
+import KidsLeaderboard from './pages/kids/KidsLeaderboard';
 
 function App() {
   return (
@@ -37,6 +59,7 @@ function App() {
       <DataProvider>
         <Router>
           <Routes>
+            {/* ── Main Citizen Science Hub ──────────────── */}
             <Route path="/" element={<Layout />}>
               <Route index element={<Home />} />
               <Route path="projects" element={<Projects />} />
@@ -58,16 +81,61 @@ function App() {
               <Route path="*" element={<NotFound />} />
             </Route>
 
+            {/* ── Admin Panel ──────────────────────────── */}
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<AdminDashboard />} />
               <Route path="projects" element={<AdminProjects />} />
+              <Route path="kids" element={
+                <KidsAuthProvider>
+                  <KidsDataProvider>
+                    <AdminKids />
+                  </KidsDataProvider>
+                </KidsAuthProvider>
+              } />
               <Route path="news" element={<AdminNews />} />
               <Route path="proposals" element={<AdminProposals />} />
               <Route path="observations" element={<AdminObservations />} />
               <Route path="users" element={<AdminUsers />} />
               <Route path="inbox" element={<AdminInbox />} />
               <Route path="settings" element={<AdminSettings />} />
+            </Route>
+
+            {/* ── Teacher Portal ───────────────────────── */}
+            <Route path="/teacher" element={
+              <KidsAuthProvider>
+                <KidsDataProvider>
+                  <TeacherLayout />
+                </KidsDataProvider>
+              </KidsAuthProvider>
+            }>
+              <Route index element={<TeacherDashboard />} />
+              <Route path="classes" element={<TeacherClassManagement />} />
+              <Route path="observations" element={<TeacherObservations />} />
+            </Route>
+
+            {/* ── Citizen Science Kids ─────────────────── */}
+            <Route path="/kids/login" element={
+              <KidsAuthProvider>
+                <KidsLogin />
+              </KidsAuthProvider>
+            } />
+            <Route path="/kids" element={
+              <KidsAuthProvider>
+                <KidsDataProvider>
+                  <KidsLayout />
+                </KidsDataProvider>
+              </KidsAuthProvider>
+            }>
+              <Route index element={<KidsDashboard />} />
+              <Route path="missions/:id/observe" element={<KidsObservation />} />
+              <Route path="discoveries" element={<KidsDiscoveries />} />
+              <Route path="progress" element={<KidsProgress />} />
+              <Route path="badges" element={<KidsBadges />} />
+              <Route path="leaderboard" element={<KidsLeaderboard />} />
+              <Route path="class" element={<KidsClass />} />
+              <Route path="school" element={<KidsSchool />} />
+              <Route path="explore" element={<KidsExploreCrete />} />
             </Route>
           </Routes>
         </Router>

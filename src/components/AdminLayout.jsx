@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, FolderKanban, FileText, Settings, LogOut, Menu, X, ClipboardList, Send, Users, Inbox } from 'lucide-react';
+import { LayoutDashboard, FolderKanban, FileText, Settings, LogOut, Menu, X, ClipboardList, Send, Users, Inbox, GraduationCap } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 
@@ -24,6 +24,7 @@ const AdminLayout = () => {
   const navItems = [
     { name: 'Dashboard', path: '/admin', end: true, icon: <LayoutDashboard size={20} /> },
     { name: 'Projects', path: '/admin/projects', end: false, icon: <FolderKanban size={20} /> },
+    { name: 'CS Kids Projects', path: '/admin/kids', end: false, icon: <GraduationCap size={20} /> },
     { name: 'Χρήστες', path: '/admin/users', end: false, icon: <Users size={20} /> },
     { name: 'Νέα & Εκδηλώσεις', path: '/admin/news', end: false, icon: <FileText size={20} /> },
     { name: 'Προτάσεις', path: '/admin/proposals', end: false, icon: <Send size={20} /> },
