@@ -8,6 +8,8 @@ import { useAuth } from '../context/AuthContext';
 const quickLinks = [
   { nameKey: 'nav.home', path: '/' },
   { nameKey: 'nav.projects', path: '/projects' },
+  { nameKey: '🌿 Citizen Science Kids', path: '/kids/login' },
+  { nameKey: '🎓 Πύλη Εκπαιδευτικών', path: '/teacher' },
   { nameKey: 'nav.participate', path: '/participate' },
   { nameKey: 'nav.data', path: '/open-data' },
   { nameKey: 'nav.news', path: '/news' },

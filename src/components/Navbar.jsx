@@ -24,10 +24,11 @@ const Navbar = () => {
   const navLinks = [
     { name: t('nav.home'), path: '/' },
     { name: t('nav.projects'), path: '/projects' },
+    { name: '🌿 CS Kids', path: '/kids/login' },
+    { name: '🎓 Εκπαιδευτικοί', path: '/teacher' },
     { name: t('nav.participate'), path: '/participate' },
     { name: t('nav.entities'), path: '/entities' },
     { name: t('nav.data'), path: '/open-data' },
-    { name: t('nav.propose'), path: '/propose' },
     { name: t('nav.news'), path: '/news' },
   ];
 
