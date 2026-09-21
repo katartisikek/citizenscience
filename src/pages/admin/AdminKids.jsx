@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Plus, School, UserPlus, Users, Download, Eye, MapPin, Search, ChevronRight, ShieldCheck, CheckCircle2, FileSpreadsheet, X, Key, ClipboardList } from 'lucide-react';
+import { Plus, School, UserPlus, Users, Download, Eye, MapPin, Search, ChevronRight, ShieldCheck, CheckCircle2, FileSpreadsheet, X, Key, ClipboardList, Trash2 } from 'lucide-react';
 import { useKidsData } from '../../context/KidsDataContext';
 
 const AdminKids = () => {
-  const { schools, teachers, classes, students, observations, projects, addSchool, addTeacher, exportSchoolDataCSV } = useKidsData();
+  const { schools, teachers, classes, students, observations, projects, addSchool, deleteSchool, addTeacher, exportSchoolDataCSV } = useKidsData();
 
   const [activeTab, setActiveTab] = useState('schools'); // 'schools' | 'projects' | 'all-observations' | 'privacy'
   const [selectedSchool, setSelectedSchool] = useState(null);
@@ -174,6 +174,19 @@ const AdminKids = () => {
                       <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                         Προβολή Καρτέλας <ChevronRight size={16} />
                       </span>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (window.confirm(`Είστε σίγουροι ότι θέλετε να διαγράψετε την καρτέλα του σχολείου "${school.name}";\nΌλα τα τμήματα και τα δεδομένα του σχολείου θα διαγραφούν.`)) {
+                            deleteSchool(school.id);
+                          }
+                        }}
+                        className="btn btn-sm btn-outline"
+                        style={{ color: '#EF4444', borderColor: '#FCA5A5', padding: '4px 8px' }}
+                        title="Διαγραφή Σχολείου"
+                      >
+                        <Trash2 size={14} />
+                      </button>
                     </div>
                   </div>
                 );
@@ -204,7 +217,7 @@ const AdminKids = () => {
               <p style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem' }}>{selectedSchool.address}</p>
             </div>
 
-            <div style={{ display: 'flex', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
               <button
                 onClick={() => setShowAddTeacherModal(true)}
                 className="btn btn-primary"
@@ -220,7 +233,21 @@ const AdminKids = () => {
                 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
               >
                 <Download size={18} />
-                <span>Άντληση Δεδομένων Σχολείου (CSV)</span>
+                <span>Άντληση Δεδομένων (CSV)</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  if (window.confirm(`Είστε σίγουροι ότι θέλετε να διαγράψετε την καρτέλα του σχολείου "${selectedSchool.name}";`)) {
+                    deleteSchool(selectedSchool.id);
+                    setSelectedSchool(null);
+                  }
+                }}
+                className="btn btn-outline"
+                style={{ color: '#EF4444', borderColor: '#FCA5A5', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+              >
+                <Trash2 size={18} />
+                <span>Διαγραφή Σχολείου</span>
               </button>
             </div>
           </div>

@@ -128,6 +128,14 @@ export const KidsDataProvider = ({ children }) => {
     return newSchool;
   }, []);
 
+  const deleteSchool = useCallback((schoolId) => {
+    setSchools(prev => prev.filter(s => s.id !== schoolId));
+    setTeachers(prev => prev.filter(t => t.school_id !== schoolId));
+    setClasses(prev => prev.filter(c => c.school_id !== schoolId));
+    setStudents(prev => prev.filter(st => st.school_id !== schoolId));
+    setObservations(prev => prev.filter(o => o.school_id !== schoolId));
+  }, []);
+
   const addTeacher = useCallback((teacherData) => {
     const newTeacher = {
       ...teacherData,
@@ -245,7 +253,7 @@ export const KidsDataProvider = ({ children }) => {
     <KidsDataContext.Provider value={{
       schools, teachers, classes, students, projects, missions, observations, badges, schoolStats,
       myObservations, myApprovedCount, myTotalCount, totalPoints, mySchool, loading,
-      addSchool, addTeacher, addClass, addStudentsToClass, addObservation, exportSchoolDataCSV,
+      addSchool, deleteSchool, addTeacher, addClass, addStudentsToClass, addObservation, exportSchoolDataCSV,
     }}>
       {children}
     </KidsDataContext.Provider>
