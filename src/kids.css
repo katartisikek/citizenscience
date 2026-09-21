@@ -2,7 +2,7 @@
 
 /* =============================================
    KIDS CARTOON DESIGN SYSTEM – CS Kids
-   Ultra Playful · Animated · Colorful · 3D Pixar Style
+   Ultra Playful · Animated · Responsive · 3D Style
    ============================================= */
 
 :root {
@@ -16,7 +16,6 @@
   --kids-green: #2ECC71;
   --kids-orange: #FF9F43;
   --kids-pink: #FD79A8;
-  --kids-blue: #74B9FF;
 
   --kids-bg: #EBF3FF;
   --kids-surface: #FFFFFF;
@@ -24,39 +23,26 @@
   --kids-text-light: #64748B;
   --kids-border: #CBD5E1;
 
-  /* ── 3D Cartoony Button Shadows ───────────────────── */
   --kids-btn-shadow-purple: 0 6px 0 #4A42E0, 0 10px 20px rgba(108, 99, 255, 0.3);
   --kids-btn-shadow-green: 0 6px 0 #27AE60, 0 10px 20px rgba(46, 204, 113, 0.3);
-  --kids-btn-shadow-orange: 0 6px 0 #E67E22, 0 10px 20px rgba(255, 159, 67, 0.3);
   --kids-card-shadow: 0 10px 30px rgba(108, 99, 255, 0.12);
 
-  /* ── Border Radius ── */
   --kids-radius-sm: 14px;
   --kids-radius-md: 22px;
   --kids-radius-lg: 32px;
   --kids-radius-full: 9999px;
 }
 
-/* ── Cartoon Keyframe Animations ── */
+/* ── Keyframe Animations ── */
 @keyframes kidsFloat {
   0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-10px) rotate(2deg); }
-}
-
-@keyframes kidsPulseGlow {
-  0%, 100% { box-shadow: 0 0 15px rgba(108, 99, 255, 0.4); }
-  50% { box-shadow: 0 0 30px rgba(255, 230, 109, 0.8); }
+  50% { transform: translateY(-8px) rotate(2deg); }
 }
 
 @keyframes kidsPopIn {
-  0% { transform: scale(0.85); opacity: 0; }
-  70% { transform: scale(1.05); }
+  0% { transform: scale(0.9); opacity: 0; }
+  70% { transform: scale(1.03); }
   100% { transform: scale(1); opacity: 1; }
-}
-
-@keyframes kidsSparkle {
-  0%, 100% { opacity: 0.3; transform: scale(0.9); }
-  50% { opacity: 1; transform: scale(1.2); }
 }
 
 /* Base Body Styles */
@@ -72,27 +58,271 @@
     radial-gradient(circle at 90% 80%, rgba(78, 205, 196, 0.2) 0%, transparent 20%);
 }
 
+.kids-app * {
+  box-sizing: border-box;
+}
+
 .kids-container {
-  max-width: 900px;
+  max-width: 960px;
   margin: 0 auto;
   width: 100%;
 }
 
-/* Cartoon Buttons */
+/* ── Mobile Header ───────────────────────── */
+.kids-header {
+  height: 60px;
+  background: white;
+  border-bottom: 3px solid #E2E8F0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.kids-header-title {
+  font-family: 'Fredoka', cursive;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--kids-purple);
+}
+
+.kids-header-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--kids-purple);
+  color: white;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(108, 99, 255, 0.3);
+}
+
+/* ── Desktop Sidebar ──────────────────────── */
+.kids-sidebar {
+  display: none;
+}
+
+@media (min-width: 769px) {
+  .kids-header {
+    display: none;
+  }
+
+  .kids-sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 270px;
+    background: linear-gradient(180deg, #1E1B4B 0%, #312E81 100%);
+    color: white;
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 50;
+    padding: 24px 16px;
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .kids-sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+    padding: 0 8px;
+  }
+
+  .kids-sidebar-logo-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid #FFE66D;
+    animation: kidsFloat 4s ease-in-out infinite;
+  }
+
+  .kids-sidebar-logo text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .kids-sidebar-logo h2 {
+    font-family: 'Fredoka', cursive;
+    font-size: 1.25rem;
+    color: #FFE66D;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .kids-sidebar-logo p {
+    font-size: 0.75rem;
+    color: #A5B4FC;
+    margin: 2px 0 0 0;
+    font-weight: 600;
+  }
+
+  .kids-sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .kids-sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 16px;
+    color: #C7D2FE;
+    text-decoration: none;
+    font-family: 'Fredoka', cursive;
+    font-size: 1.05rem;
+    font-weight: 500;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .kids-sidebar-item:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: white;
+    transform: translateX(4px);
+  }
+
+  .kids-sidebar-item.active {
+    background: #6C63FF;
+    color: white;
+    box-shadow: 0 6px 16px rgba(108, 99, 255, 0.4);
+    font-weight: 700;
+  }
+
+  .kids-sidebar-item .icon {
+    font-size: 1.3rem;
+  }
+
+  .kids-sidebar-user {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .kids-sidebar-user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #FFE66D;
+    color: #1E1B4B;
+    font-family: 'Fredoka', cursive;
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .kids-sidebar-user-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .kids-sidebar-user-name {
+    font-family: 'Fredoka', cursive;
+    font-size: 0.95rem;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .kids-sidebar-user-school {
+    font-size: 0.75rem;
+    color: #A5B4FC;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .kids-main {
+    margin-left: 270px;
+    padding: 24px 24px 60px 24px;
+    flex: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .kids-main {
+    margin-left: 0;
+    padding: 16px 16px 80px 16px;
+    flex: 1;
+  }
+}
+
+/* ── Mobile Bottom Navigation ────────────── */
+.kids-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 72px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-top: 3px solid #E2E8F0;
+  z-index: 100;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.kids-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: #64748B;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: transform 0.2s;
+}
+
+.kids-nav-item.active {
+  color: #6C63FF;
+  transform: translateY(-4px) scale(1.1);
+}
+
+.kids-nav-item .icon {
+  font-size: 1.5rem;
+  margin-bottom: 2px;
+}
+
+@media (min-width: 769px) {
+  .kids-bottom-nav {
+    display: none;
+  }
+}
+
+/* ── Cartoon Buttons ─────────────────────── */
 .kids-btn {
   font-family: 'Fredoka', cursive, sans-serif;
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-weight: 600;
-  padding: 14px 28px;
+  padding: 12px 24px;
   border-radius: var(--kids-radius-full);
   border: none;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  position: relative;
   user-select: none;
 }
 
@@ -107,24 +337,17 @@
   box-shadow: 0 8px 0 #4A42E0, 0 15px 25px rgba(108, 99, 255, 0.4);
 }
 
-.kids-btn-primary:active {
-  transform: translateY(3px);
-  box-shadow: 0 2px 0 #4A42E0;
-}
-
-.kids-btn-green {
-  background: linear-gradient(135deg, #2ECC71 0%, #5DD99B 100%);
-  color: white;
-  box-shadow: var(--kids-btn-shadow-green);
-}
-
 .kids-btn-ghost {
-  background: rgba(255, 255, 255, 0.8);
-  color: var(--kids-purple);
-  border: 2px solid var(--kids-purple);
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-/* Cartoon Cards */
+.kids-btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ── Cartoon Cards ────────────────────────── */
 .kids-card {
   background: white;
   border-radius: var(--kids-radius-lg);
@@ -141,7 +364,7 @@
   box-shadow: 0 14px 35px rgba(108, 99, 255, 0.18);
 }
 
-/* Playful Cartoon Header / Login */
+/* ── Cartoon Login Screen ─────────────────── */
 .kids-login {
   min-height: 100vh;
   display: flex;
@@ -187,7 +410,6 @@
   margin-bottom: 4px;
 }
 
-/* Input Fields Cartoon Style */
 .kids-input-group {
   text-align: left;
   margin-bottom: 18px;
@@ -221,46 +443,6 @@
   box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.2);
 }
 
-/* Kids Bottom Mobile Navigation */
-.kids-bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 72px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(12px);
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  border-top: 3px solid #E2E8F0;
-  z-index: 100;
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-}
-
-.kids-nav-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-decoration: none;
-  color: #64748B;
-  font-family: 'Fredoka', sans-serif;
-  font-size: 0.75rem;
-  font-weight: 600;
-  transition: transform 0.2s;
-}
-
-.kids-nav-item.active {
-  color: #6C63FF;
-  transform: translateY(-4px) scale(1.1);
-}
-
-.kids-nav-item .icon {
-  font-size: 1.5rem;
-  margin-bottom: 2px;
-}
-
-/* Cartoon Badges & Stats */
 .kids-stat-card {
   background: white;
   border-radius: 20px;
@@ -281,8 +463,4 @@
   font-size: 0.85rem;
   font-weight: 700;
   color: #64748B;
-}
-
-@media (min-width: 769px) {
-  .kids-bottom-nav { display: none; }
 }

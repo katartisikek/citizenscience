@@ -41,11 +41,11 @@ const KidsLayout = () => {
       <header className="kids-header">
         <div className="kids-header-title">🌿 CS Kids</div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ fontSize: '0.8rem', color: 'var(--kids-text-light)', fontWeight: 600 }}>
+          <span style={{ fontSize: '0.85rem', color: '#64748B', fontWeight: 700 }}>
             {student.alias}
           </span>
           <div className="kids-header-avatar" onClick={handleLogout} title="Αποσύνδεση">
-            {student.alias?.slice(-2) || '??'}
+            {student.alias?.slice(-2) || '01'}
           </div>
         </div>
       </header>
@@ -53,8 +53,11 @@ const KidsLayout = () => {
       {/* Desktop Sidebar */}
       <aside className="kids-sidebar">
         <div className="kids-sidebar-logo">
-          <h2>🌿 Citizen Science Kids</h2>
-          <p>Εξερεύνησε · Ανακάλυψε · Μάθε</p>
+          <img src="/assets/kids_mascot_hero.jpg" alt="Mascot" className="kids-sidebar-logo-img" />
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <h2>Citizen Science Kids</h2>
+            <p>Εξερεύνησε · Ανακάλυψε · Μάθε</p>
+          </div>
         </div>
 
         <nav className="kids-sidebar-nav">
@@ -73,16 +76,16 @@ const KidsLayout = () => {
 
         <div className="kids-sidebar-user">
           <div className="kids-sidebar-user-avatar">
-            {student.alias?.slice(-2) || '??'}
+            {student.alias?.slice(-2) || '01'}
           </div>
           <div className="kids-sidebar-user-info">
             <div className="kids-sidebar-user-name">{student.alias}</div>
-            <div className="kids-sidebar-user-school">{student.school_name}</div>
+            <div className="kids-sidebar-user-school">{student.school_name || '1ο Δημοτικό'}</div>
           </div>
           <button
             onClick={handleLogout}
-            className="kids-btn kids-btn-ghost kids-btn-sm"
-            style={{ marginLeft: 'auto', padding: '6px 12px', fontSize: '0.75rem' }}
+            className="kids-btn kids-btn-ghost"
+            style={{ padding: '6px 12px', fontSize: '0.75rem', borderRadius: '12px' }}
           >
             Έξοδος
           </button>
