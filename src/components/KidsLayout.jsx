@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useKidsAuth } from '../context/KidsAuthContext';
 import '../kids.css';
@@ -25,13 +26,18 @@ const KidsLayout = () => {
   const { student, logout } = useKidsAuth();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (!student) {
+      navigate('/kids/login', { replace: true });
+    }
+  }, [student, navigate]);
+
   const handleLogout = () => {
     logout();
     navigate('/kids/login');
   };
 
   if (!student) {
-    navigate('/kids/login');
     return null;
   }
 

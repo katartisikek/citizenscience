@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useKidsAuth } from '../../context/KidsAuthContext';
 import '../../kids.css';
@@ -10,10 +10,11 @@ const KidsLogin = () => {
   const [alias, setAlias] = useState('');
   const [pin, setPin] = useState('');
 
-  if (isLoggedIn) {
-    navigate('/kids');
-    return null;
-  }
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate('/kids', { replace: true });
+    }
+  }, [isLoggedIn, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,6 +29,10 @@ const KidsLogin = () => {
       // Error handles in context
     }
   };
+
+  if (isLoggedIn) {
+    return null;
+  }
 
   return (
     <div className="kids-login">
@@ -120,3 +125,4 @@ const KidsLogin = () => {
 };
 
 export default KidsLogin;
+

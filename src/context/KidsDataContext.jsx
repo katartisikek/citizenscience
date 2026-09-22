@@ -38,11 +38,11 @@ const initialStudents = [
 ];
 
 const initialBadges = [
-  { id: 1, name: 'Mediterranean Diet Explorer', icon: '🫒', description: 'Εξερεύνηση μεσογειακής διατροφής' },
-  { id: 2, name: 'Local Food Champion', icon: '🥬', description: 'Πρωταθλητής τοπικών τροφίμων' },
-  { id: 3, name: 'Seasonality Champion', icon: '🌻', description: 'Πρωταθλητής εποχικότητας' },
-  { id: 4, name: 'Zero Waste School', icon: '♻️', description: 'Σχολείο μηδενικών αποβλήτων' },
-  { id: 5, name: 'Citizen Science Excellence', icon: '🔬', description: 'Αριστεία Citizen Science' },
+  { id: 1, name: 'Mediterranean Diet Explorer', icon: '🫒', description: 'Εξερεύνηση μεσογειακής διατροφής', target_type: 'student', criteria_type: 'observation_count', criteria_value: 1 },
+  { id: 2, name: 'Local Food Champion', icon: '🥬', description: 'Πρωταθλητής τοπικών τροφίμων', target_type: 'student', criteria_type: 'observation_count', criteria_value: 3 },
+  { id: 3, name: 'Seasonality Champion', icon: '🌻', description: 'Πρωταθλητής εποχικότητας', target_type: 'student', criteria_type: 'observation_count', criteria_value: 5 },
+  { id: 4, name: 'Zero Waste School', icon: '♻️', description: 'Σχολείο μηδενικών αποβλήτων', target_type: 'school', criteria_type: 'observation_count', criteria_value: 10 },
+  { id: 5, name: 'Citizen Science Excellence', icon: '🔬', description: 'Αριστεία Citizen Science', target_type: 'school', criteria_type: 'observation_count', criteria_value: 20 },
 ];
 
 const initialProjects = [
@@ -221,15 +221,21 @@ export const KidsDataProvider = ({ children }) => {
   }, [classes, students]);
 
   const addObservation = useCallback((observationData) => {
+    const studentObj = students.find(s => s.id === observationData.student_alias_id);
+    const classObj = classes.find(c => c.id === observationData.class_id);
+    const schoolObj = schools.find(s => s.id === observationData.school_id);
     const newObs = {
       ...observationData,
       id: Date.now(),
+      student_alias: studentObj?.alias || student?.alias || observationData.student_alias || 'Unknown',
+      school_name: schoolObj?.name || student?.school_name || '',
+      class_name: classObj?.name || student?.class_name || '',
       status: 'pending',
       submitted_at: new Date().toISOString(),
     };
     setObservations(prev => [newObs, ...prev]);
     return newObs;
-  }, []);
+  }, [students, classes, schools, student]);
 
   const exportSchoolDataCSV = useCallback((schoolId) => {
     const targetSchool = schools.find(s => s.id === schoolId);
@@ -288,10 +294,27 @@ export const KidsDataProvider = ({ children }) => {
   const totalPoints = myObservations.length * 10;
   const mySchool = schoolStats.find(s => s.school_id === student?.school_id) || schoolStats[0];
 
+  // Sorted school stats for ranking
+  const sortedSchoolStats = [...schoolStats].sort((a, b) => b.observation_count - a.observation_count);
+  const schoolRank = mySchool
+    ? sortedSchoolStats.findIndex(s => s.school_id === mySchool.school_id) + 1
+    : 0;
+
+  // Badge awards (mock: award badges based on observation count)
+  const badgeAwards = [];
+  if (myTotalCount >= 1) badgeAwards.push({ badge_id: 1, student_alias: student?.alias, school_id: student?.school_id });
+  if (myTotalCount >= 3) badgeAwards.push({ badge_id: 2, student_alias: student?.alias, school_id: student?.school_id });
+  if (myApprovedCount >= 2) badgeAwards.push({ badge_id: 3, student_alias: student?.alias, school_id: student?.school_id });
+
+  const myBadgeIds = new Set(badgeAwards.map(a => a.badge_id));
+  const myBadges = badges.filter(b => myBadgeIds.has(b.id));
+
   return (
     <KidsDataContext.Provider value={{
+      loading: false,
       schools, teachers, classes, students, projects, missions, observations, badges, schoolStats,
       myObservations, myApprovedCount, myTotalCount, totalPoints, mySchool,
+      schoolRank, badgeAwards, myBadgeIds, myBadges,
       teacherUser, teacherLogin, teacherLogout,
       addSchool, deleteSchool, addTeacher, addClass, addStudentsToClass, addObservation, exportSchoolDataCSV,
     }}>
