@@ -53,6 +53,7 @@ import KidsClass from './pages/kids/KidsClass';
 import KidsSchool from './pages/kids/KidsSchool';
 import KidsExploreCrete from './pages/kids/KidsExploreCrete';
 import KidsLeaderboard from './pages/kids/KidsLeaderboard';
+import KidsHome from './pages/kids/KidsHome';
 
 function App() {
   return (
@@ -79,6 +80,7 @@ function App() {
               <Route path="reset-password" element={<ResetPassword />} />
               <Route path="register" element={<Register />} />
               <Route path="profile" element={<Profile />} />
+              <Route path="kids-home" element={<KidsHome />} />
               <Route path="*" element={<NotFound />} />
             </Route>
 
