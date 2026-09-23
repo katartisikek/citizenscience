@@ -90,17 +90,33 @@ const KidsLeaderboard = () => {
       )}
 
       {/* City Filter Pills */}
-      <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '12px', marginBottom: '16px' }}>
-        {cities.map(city => (
-          <button
-            key={city}
-            onClick={() => setFilterCity(city)}
-            className={`kids-btn ${filterCity === city ? 'kids-btn-primary' : 'kids-btn-ghost'}`}
-            style={{ borderRadius: '20px', padding: '6px 16px', fontSize: '0.85rem', whiteSpace: 'nowrap' }}
-          >
-            {city === 'all' ? '🏛️ Όλες οι Πόλεις' : `📍 ${city}`}
-          </button>
-        ))}
+      <div style={{ display: 'flex', gap: '10px', overflowX: 'auto', paddingBottom: '12px', marginBottom: '18px' }}>
+        {cities.map(city => {
+          const active = filterCity === city;
+          return (
+            <button
+              key={city}
+              type="button"
+              onClick={() => setFilterCity(city)}
+              style={{
+                borderRadius: '999px',
+                padding: '8px 18px',
+                fontSize: '0.88rem',
+                whiteSpace: 'nowrap',
+                border: active ? '2px solid #6C63FF' : '2px solid #CBD5E1',
+                background: active ? 'linear-gradient(135deg, #6C63FF 0%, #8B85FF 100%)' : 'white',
+                color: active ? 'white' : '#334155',
+                fontWeight: 700,
+                fontFamily: "'Fredoka', sans-serif",
+                cursor: 'pointer',
+                boxShadow: active ? '0 6px 16px rgba(108, 99, 255, 0.35)' : '0 2px 6px rgba(0, 0, 0, 0.04)',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              {city === 'all' ? '🏛️ Όλες οι Πόλεις' : `📍 ${city}`}
+            </button>
+          );
+        })}
       </div>
 
       {/* Leaderboard Table */}

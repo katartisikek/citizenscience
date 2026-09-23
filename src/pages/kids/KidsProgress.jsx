@@ -54,29 +54,29 @@ const KidsProgress = () => {
 
       <div className="kids-stagger" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--kids-space-md)' }}>
         {missionProgress.map(m => (
-          <div key={m.id} className="kids-card" style={{ padding: 'var(--kids-space-lg)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--kids-space-md)', marginBottom: '14px' }}>
+          <div key={m.id} className="kids-card" style={{ padding: '22px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '16px' }}>
               <div style={{
                 width: 48, height: 48, borderRadius: '16px', background: '#EEF2FF',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.6rem', flexShrink: 0
               }}>
                 {m.icon}
               </div>
-              <div style={{ flex: 1 }}>
-                <h4 style={{ margin: '0 0 2px 0', fontFamily: "'Fredoka', sans-serif", fontSize: '1.05rem', color: 'var(--kids-purple)' }}>{m.title}</h4>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <h4 style={{ margin: '0 0 3px 0', fontFamily: "'Fredoka', sans-serif", fontSize: '1.05rem', color: 'var(--kids-purple)' }}>{m.title}</h4>
                 <span style={{ fontSize: '0.8rem', color: 'var(--kids-text-muted)' }}>⭐ {m.points} πόντοι / παρατήρηση</span>
               </div>
-              <div style={{ textAlign: 'right' }}>
-                <span style={{ fontFamily: "'Fredoka', sans-serif", fontWeight: 700, color: 'var(--kids-purple)', fontSize: '1.3rem', display: 'block' }}>
+              <div style={{ textAlign: 'right', flexShrink: 0, whiteSpace: 'nowrap' }}>
+                <span style={{ fontFamily: "'Fredoka', sans-serif", fontWeight: 700, color: 'var(--kids-purple)', fontSize: '1.3rem', display: 'block', lineHeight: 1.1 }}>
                   {m.count}
                 </span>
                 <span style={{ fontSize: '0.75rem', color: 'var(--kids-text-light)', fontWeight: 600 }}>παρατηρήσεις</span>
               </div>
             </div>
 
-            <div className="kids-progress-label">
-              <span>✅ {m.approved} εγκεκριμένες</span>
-              <span>📊 {m.count} σύνολο</span>
+            <div className="kids-progress-label" style={{ marginBottom: '6px' }}>
+              <span style={{ whiteSpace: 'nowrap' }}>✅ {m.approved} εγκεκριμένες</span>
+              <span style={{ whiteSpace: 'nowrap' }}>📊 {m.count} σύνολο</span>
             </div>
             <div className="kids-progress">
               <div

@@ -50,25 +50,44 @@ const KidsClass = () => {
 
       {/* Mission Progress */}
       <div className="kids-section-header">
-        <h3 className="kids-section-title" style={{ fontSize: '1.1rem' }}>🎯 Πρόοδος Αποστολών</h3>
+        <h3 className="kids-section-title" style={{ fontSize: '1.2rem' }}>🎯 Πρόοδος Αποστολών</h3>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--kids-space-md)' }}>
         {missions.map(m => {
           const count = myObservations.filter(o => o.mission_id === m.id).length;
           return (
-            <div key={m.id} className="kids-card" style={{ padding: 'var(--kids-space-md)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--kids-space-md)' }}>
-                <span style={{ fontSize: '1.5rem' }}>{m.icon}</span>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 600, fontSize: '0.9rem', fontFamily: "'Fredoka', sans-serif" }}>{m.title}</div>
-                  <div className="kids-progress" style={{ marginTop: '6px' }}>
-                    <div className="kids-progress-bar" style={{ width: `${Math.min(count * 10, 100)}%` }} />
-                  </div>
+            <div key={m.id} className="kids-card" style={{ padding: '20px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '12px' }}>
+                <div style={{
+                  width: 44, height: 44, borderRadius: '14px', background: '#EEF2FF',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', flexShrink: 0
+                }}>
+                  {m.icon}
                 </div>
-                <span style={{ fontFamily: "'Fredoka', sans-serif", fontWeight: 700, color: 'var(--kids-purple)' }}>
-                  {count}
-                </span>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <h4 style={{ margin: '0 0 2px 0', fontWeight: 700, fontSize: '1.05rem', fontFamily: "'Fredoka', sans-serif", color: 'var(--kids-purple)' }}>
+                    {m.title}
+                  </h4>
+                  <span style={{ fontSize: '0.8rem', color: 'var(--kids-text-muted)' }}>
+                    ⭐ {m.points} πόντοι / παρατήρηση
+                  </span>
+                </div>
+                <div style={{
+                  background: '#EEF2FF', border: '1.5px solid #C7D2FE', padding: '4px 14px',
+                  borderRadius: '999px', fontFamily: "'Fredoka', sans-serif", fontWeight: 700,
+                  color: 'var(--kids-purple)', fontSize: '1.1rem', flexShrink: 0, whiteSpace: 'nowrap'
+                }}>
+                  {count} παρατηρήσεις
+                </div>
+              </div>
+
+              <div className="kids-progress-label">
+                <span>📊 Πρόοδος Τάξης</span>
+                <span>{count} καταγραφές</span>
+              </div>
+              <div className="kids-progress">
+                <div className="kids-progress-bar" style={{ width: `${Math.min(count * 20, 100)}%` }} />
               </div>
             </div>
           );
