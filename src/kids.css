@@ -931,4 +931,91 @@
   color: #64748B;
 }
 
+/* ── Kids Leaderboard ────────────────────────────── */
+.kids-leaderboard {
+  background: white;
+  border-radius: var(--kids-radius-lg);
+  border: 3px solid #E2E8F0;
+  box-shadow: 0 10px 30px rgba(108, 99, 255, 0.12);
+  overflow: hidden;
+}
+
+.kids-leaderboard-header {
+  padding: 16px 20px;
+  background: #F8FAFC;
+  border-bottom: 2px solid #E2E8F0;
+}
+
+.kids-leaderboard-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  border-bottom: 1px solid #E2E8F0;
+  transition: background 0.2s ease;
+}
+
+.kids-leaderboard-row:last-child {
+  border-bottom: none;
+}
+
+.kids-leaderboard-row.highlight {
+  background: #EEF2FF;
+}
+
+.kids-leaderboard-rank {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  background: #F1F5F9;
+  color: #64748B;
+}
+
+.kids-leaderboard-rank.gold {
+  background: #FEF08A;
+  color: #854D0E;
+  font-size: 1.6rem;
+  box-shadow: 0 4px 12px rgba(254, 240, 138, 0.6);
+}
+
+.kids-leaderboard-rank.silver {
+  background: #E2E8F0;
+  color: #475569;
+  font-size: 1.5rem;
+}
+
+.kids-leaderboard-rank.bronze {
+  background: #FFEDD5;
+  color: #9A3412;
+  font-size: 1.5rem;
+}
+
+.kids-leaderboard-name {
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #1E293B;
+  display: flex;
+  align-items: center;
+}
+
+.kids-leaderboard-score {
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: #6C63FF;
+  flex-shrink: 0;
+  background: #EEF2FF;
+  padding: 4px 14px;
+  border-radius: var(--kids-radius-full);
+}
+
+
 

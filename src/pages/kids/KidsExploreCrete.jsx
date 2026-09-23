@@ -98,35 +98,31 @@ const KidsExploreCrete = () => {
 
       <div className="kids-stagger" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--kids-space-md)' }}>
         {projects.map(project => (
-          <div key={project.id} className="kids-card" style={{ padding: 'var(--kids-space-lg)' }}>
-            <div style={{ display: 'flex', gap: 'var(--kids-space-md)', alignItems: 'flex-start' }}>
+          <div key={project.id} className="kids-card" style={{ padding: '20px' }}>
+            <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
               {project.image && (
                 <img
                   src={project.image}
                   alt={project.title}
                   style={{
-                    width: 60, height: 60, borderRadius: 'var(--kids-radius-md)',
-                    objectFit: 'cover', flexShrink: 0,
+                    width: 72, height: 72, borderRadius: '18px',
+                    objectFit: 'cover', flexShrink: 0, border: '2px solid #E2E8F0',
                   }}
                 />
               )}
-              <div>
-                <h4 style={{ margin: '0 0 4px', fontFamily: "'Fredoka', sans-serif", fontSize: '1rem' }}>
+              <div style={{ flex: 1 }}>
+                <h4 style={{ margin: '0 0 4px 0', fontFamily: "'Fredoka', sans-serif", fontSize: '1.1rem', color: 'var(--kids-purple)' }}>
                   {project.title}
                 </h4>
-                <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--kids-text-light)' }}>
+                <p style={{ margin: '0 0 8px 0', fontSize: '0.88rem', color: 'var(--kids-text-light)', lineHeight: 1.4 }}>
                   {project.description}
                 </p>
-                <div style={{ marginTop: '8px' }}>
-                  <span style={{
-                    padding: '2px 10px', borderRadius: 'var(--kids-radius-full)',
-                    background: 'rgba(46, 204, 113, 0.1)', color: 'var(--kids-green)',
-                    fontSize: '0.75rem', fontWeight: 600,
-                  }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <span className="kids-chip" style={{ background: '#DCFCE7', color: '#15803D', border: '1px solid #86EFAC' }}>
                     ✅ Ενεργό
                   </span>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--kids-text-muted)', marginLeft: '8px' }}>
-                    {missions.filter(m => m.project_id === project.id).length} αποστολές
+                  <span style={{ fontSize: '0.8rem', color: 'var(--kids-text-muted)', fontWeight: 600 }}>
+                    🎯 {missions.filter(m => m.project_id === project.id).length} αποστολές
                   </span>
                 </div>
               </div>

@@ -55,20 +55,28 @@ const KidsProgress = () => {
       <div className="kids-stagger" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--kids-space-md)' }}>
         {missionProgress.map(m => (
           <div key={m.id} className="kids-card" style={{ padding: 'var(--kids-space-lg)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--kids-space-md)', marginBottom: 'var(--kids-space-md)' }}>
-              <span style={{ fontSize: '1.5rem' }}>{m.icon}</span>
-              <div style={{ flex: 1 }}>
-                <h4 style={{ margin: 0, fontFamily: "'Fredoka', sans-serif", fontSize: '0.95rem' }}>{m.title}</h4>
-                <span style={{ fontSize: '0.75rem', color: 'var(--kids-text-muted)' }}>⭐ {m.points} πόντοι/παρατήρηση</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--kids-space-md)', marginBottom: '14px' }}>
+              <div style={{
+                width: 48, height: 48, borderRadius: '16px', background: '#EEF2FF',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.6rem', flexShrink: 0
+              }}>
+                {m.icon}
               </div>
-              <span style={{ fontFamily: "'Fredoka', sans-serif", fontWeight: 700, color: 'var(--kids-purple)', fontSize: '1.2rem' }}>
-                {m.count}
-              </span>
+              <div style={{ flex: 1 }}>
+                <h4 style={{ margin: '0 0 2px 0', fontFamily: "'Fredoka', sans-serif", fontSize: '1.05rem', color: 'var(--kids-purple)' }}>{m.title}</h4>
+                <span style={{ fontSize: '0.8rem', color: 'var(--kids-text-muted)' }}>⭐ {m.points} πόντοι / παρατήρηση</span>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <span style={{ fontFamily: "'Fredoka', sans-serif", fontWeight: 700, color: 'var(--kids-purple)', fontSize: '1.3rem', display: 'block' }}>
+                  {m.count}
+                </span>
+                <span style={{ fontSize: '0.75rem', color: 'var(--kids-text-light)', fontWeight: 600 }}>παρατηρήσεις</span>
+              </div>
             </div>
 
             <div className="kids-progress-label">
-              <span>{m.approved} εγκεκριμένες</span>
-              <span>{m.count} σύνολο</span>
+              <span>✅ {m.approved} εγκεκριμένες</span>
+              <span>📊 {m.count} σύνολο</span>
             </div>
             <div className="kids-progress">
               <div
