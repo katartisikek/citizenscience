@@ -464,3 +464,207 @@
   font-weight: 700;
   color: #64748B;
 }
+
+/* ── Kids Observation Wizard & Form System ─────────────────── */
+.kids-wizard {
+  background: white;
+  border-radius: var(--kids-radius-lg);
+  box-shadow: 0 16px 40px rgba(108, 99, 255, 0.15);
+  border: 3px solid #E2E8F0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.kids-wizard-steps-header {
+  background: linear-gradient(135deg, #F8FAFC 0%, #EEF2FF 100%);
+  padding: 24px 20px 16px 20px;
+  border-bottom: 2px solid #E2E8F0;
+  position: relative;
+}
+
+.kids-wizard-progress-track {
+  height: 8px;
+  background: #E2E8F0;
+  border-radius: var(--kids-radius-full);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.kids-wizard-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6C63FF 0%, #4ECDC4 100%);
+  border-radius: var(--kids-radius-full);
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.kids-wizard-steps {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  position: relative;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.kids-wizard-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 0;
+  z-index: 2;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.kids-wizard-step-num {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: white;
+  border: 3px solid #CBD5E1;
+  color: #64748B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.kids-wizard-step.active .kids-wizard-step-num {
+  border-color: #6C63FF;
+  background: linear-gradient(135deg, #6C63FF 0%, #8B85FF 100%);
+  color: white;
+  transform: scale(1.15);
+  box-shadow: 0 8px 20px rgba(108, 99, 255, 0.4);
+}
+
+.kids-wizard-step.completed .kids-wizard-step-num {
+  border-color: #2ECC71;
+  background: #2ECC71;
+  color: white;
+  box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+}
+
+.kids-wizard-step-label {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748B;
+  transition: color 0.2s;
+}
+
+.kids-wizard-step.active .kids-wizard-step-label {
+  color: #6C63FF;
+  font-weight: 700;
+}
+
+.kids-wizard-step.completed .kids-wizard-step-label {
+  color: #2ECC71;
+}
+
+.kids-wizard-body {
+  padding: 32px 28px;
+  min-height: 280px;
+}
+
+.kids-wizard-footer {
+  padding: 20px 28px;
+  background: #F8FAFC;
+  border-top: 2px solid #E2E8F0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ── Photo Upload Component ── */
+.kids-photo-upload {
+  border: 3px dashed #A5A0FF;
+  border-radius: 24px;
+  background: #F4F3FF;
+  padding: 36px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.kids-photo-upload:hover {
+  border-color: #6C63FF;
+  background: #EEF2FF;
+  transform: translateY(-2px);
+}
+
+.kids-photo-upload.has-photo {
+  border-style: solid;
+  border-color: #2ECC71;
+  padding: 12px;
+  background: #F0FDF4;
+}
+
+.kids-photo-preview {
+  width: 100%;
+  max-height: 260px;
+  object-fit: cover;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* ── Button Variations ── */
+.kids-btn-outline {
+  background: white;
+  color: #475569;
+  border: 2px solid #CBD5E1;
+  box-shadow: 0 4px 0 #CBD5E1;
+}
+
+.kids-btn-outline:hover {
+  background: #F8FAFC;
+  border-color: #94A3B8;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #94A3B8;
+}
+
+.kids-btn-success {
+  background: linear-gradient(135deg, #2ECC71 0%, #27AE60 100%);
+  color: white;
+  box-shadow: var(--kids-btn-shadow-green);
+}
+
+.kids-btn-success:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 0 #219653, 0 15px 25px rgba(46, 204, 113, 0.4);
+}
+
+.kids-btn-lg {
+  padding: 14px 32px;
+  font-size: 1.25rem;
+}
+
+.kids-btn-sm {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+}
+
+.kids-btn-secondary {
+  background: linear-gradient(135deg, #FF9F43 0%, #FF7979 100%);
+  color: white;
+  box-shadow: 0 6px 0 #E67E22, 0 10px 20px rgba(255, 159, 67, 0.3);
+}
+
+.kids-btn-secondary:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 0 #D35400, 0 15px 25px rgba(255, 159, 67, 0.4);
+}
+
+.kids-animate-in {
+  animation: kidsPopIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
