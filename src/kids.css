@@ -668,3 +668,267 @@
   animation: kidsPopIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+/* ── Kids Stats Grid ────────────────────────────── */
+.kids-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+}
+
+.kids-stat {
+  background: white;
+  border-radius: var(--kids-radius-md);
+  padding: 20px 14px;
+  text-align: center;
+  border: 3px solid #E2E8F0;
+  box-shadow: 0 8px 20px rgba(108, 99, 255, 0.08);
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.kids-stat:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 25px rgba(108, 99, 255, 0.18);
+}
+
+.kids-stat-icon {
+  font-size: 2.2rem;
+  margin-bottom: 6px;
+  line-height: 1;
+}
+
+.kids-stat-number {
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #6C63FF;
+  line-height: 1.1;
+  margin-bottom: 2px;
+}
+
+.kids-stat-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #64748B;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.kids-stat.purple { border-color: #6C63FF; }
+.kids-stat.purple .kids-stat-number { color: #6C63FF; }
+
+.kids-stat.turquoise { border-color: #4ECDC4; }
+.kids-stat.turquoise .kids-stat-number { color: #4ECDC4; }
+
+.kids-stat.green { border-color: #2ECC71; }
+.kids-stat.green .kids-stat-number { color: #2ECC71; }
+
+.kids-stat.orange { border-color: #FF9F43; }
+.kids-stat.orange .kids-stat-number { color: #FF9F43; }
+
+/* ── Kids Badge Cards ───────────────────────────── */
+.kids-badge-card {
+  background: white;
+  border-radius: 24px;
+  padding: 22px 16px;
+  text-align: center;
+  border: 3px solid #E2E8F0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.kids-badge-card:hover {
+  transform: translateY(-4px);
+}
+
+.kids-badge-card.earned {
+  border-color: #FFE66D;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FFFDEB 100%);
+  box-shadow: 0 10px 25px rgba(255, 230, 109, 0.4);
+}
+
+.kids-badge-card.locked {
+  opacity: 0.78;
+  background: #F8FAFC;
+  border-color: #CBD5E1;
+}
+
+.kids-badge-icon {
+  font-size: 3rem;
+  margin-bottom: 10px;
+  line-height: 1;
+}
+
+.kids-badge-name {
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #1E293B;
+  margin-bottom: 6px;
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+.kids-badge-desc {
+  font-size: 0.82rem;
+  color: #64748B;
+  line-height: 1.35;
+}
+
+/* ── Kids Progress Bar System ────────────────────── */
+.kids-progress-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: #64748B;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.kids-progress {
+  height: 14px;
+  background: #E2E8F0;
+  border-radius: var(--kids-radius-full);
+  overflow: hidden;
+}
+
+.kids-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #6C63FF 0%, #2ECC71 100%);
+  border-radius: var(--kids-radius-full);
+  transition: width 0.5s ease;
+}
+
+/* ── Kids Status Badges ──────────────────────────── */
+.kids-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: var(--kids-radius-full);
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-family: 'Fredoka', sans-serif;
+}
+
+.kids-status.pending {
+  background: #FEF3C7;
+  color: #B45309;
+  border: 1.5px solid #FCD34D;
+}
+
+.kids-status.approved {
+  background: #DCFCE7;
+  color: #15803D;
+  border: 1.5px solid #86EFAC;
+}
+
+.kids-status.needs_revision {
+  background: #E0E7FF;
+  color: #4338CA;
+  border: 1.5px solid #A5B4FC;
+}
+
+.kids-status.rejected {
+  background: #FEE2E2;
+  color: #B91C1C;
+  border: 1.5px solid #FCA5A5;
+}
+
+/* ── Kids Section Headers & Titles ──────────────── */
+.kids-section-header {
+  margin-bottom: 20px;
+}
+
+.kids-section-title {
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1E293B;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.kids-section-subtitle {
+  font-size: 0.95rem;
+  color: #64748B;
+  margin: 4px 0 0 0;
+  font-weight: 500;
+}
+
+/* ── Kids Chips & Gradients ─────────────────────── */
+.kids-card-gradient {
+  background: linear-gradient(135deg, #6C63FF 0%, #4ECDC4 100%);
+  color: white;
+  border: 3px solid #FFFFFF;
+  box-shadow: 0 14px 35px rgba(108, 99, 255, 0.25);
+}
+
+.kids-title {
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.kids-subtitle {
+  font-size: 0.95rem;
+  margin-top: 4px;
+}
+
+.kids-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--kids-radius-full);
+  font-weight: 700;
+  font-size: 0.82rem;
+  font-family: 'Fredoka', sans-serif;
+}
+
+.kids-chip-purple {
+  background: #EEF2FF;
+  color: #4A42E0;
+  border: 1.5px solid #C7D2FE;
+}
+
+/* ── Kids Empty State ───────────────────────────── */
+.kids-empty {
+  text-align: center;
+  padding: 48px 24px;
+  background: white;
+  border-radius: var(--kids-radius-lg);
+  border: 3px dashed #CBD5E1;
+}
+
+.kids-empty-icon {
+  font-size: 3.5rem;
+  margin-bottom: 12px;
+}
+
+.kids-empty-title {
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1E293B;
+  margin-bottom: 6px;
+}
+
+.kids-empty-text {
+  font-size: 0.9rem;
+  color: #64748B;
+}
+
+

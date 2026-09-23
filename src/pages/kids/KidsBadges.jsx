@@ -21,7 +21,7 @@ const KidsBadges = () => {
           </h3>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))',
             gap: 'var(--kids-space-md)',
             marginBottom: 'var(--kids-space-2xl)',
           }}>
@@ -42,7 +42,7 @@ const KidsBadges = () => {
       </h3>
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))',
         gap: 'var(--kids-space-md)',
       }}>
         {lockedBadges.map(badge => (
